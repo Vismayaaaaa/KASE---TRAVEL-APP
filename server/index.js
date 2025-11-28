@@ -139,7 +139,7 @@ const transformGoogleExperience = (place, forcedCategory = null) => {
 
     if (place.photos && place.photos.length > 0) {
         images = place.photos.slice(0, 5).map(photo =>
-            `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference=${photo.photo_reference}&key=${process.env.GOOGLE_MAPS_API_KEY || "AIzaSyBRMYh1HGLzVClcnu61ZGSDFgN8683YX7k"}`
+            `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photo_reference=${photo.photo_reference}&key=${process.env.GOOGLE_MAPS_API_KEY}`
         );
     }
 
@@ -184,7 +184,7 @@ app.get('/api/experiences', async (req, res) => {
             try {
                 const searchTerm = category ? `things to do near ${category}` : 'experiences tourists';
                 const googleRes = await axios.get(
-                    `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(searchTerm)}&key=${process.env.GOOGLE_MAPS_API_KEY || "AIzaSyBRMYh1HGLzVClcnu61ZGSDFgN8683YX7k"}`
+                    `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(searchTerm)}&key=${process.env.GOOGLE_MAPS_API_KEY}`
                 );
 
                 if (googleRes.data.status === 'OK') {
@@ -244,7 +244,7 @@ app.get('/api/experiences/:id', async (req, res) => {
         if (!experience) {
             try {
                 const googleRes = await axios.get(
-                    `https://maps.googleapis.com/maps/api/place/details/json?place_id=${id}&key=${process.env.GOOGLE_MAPS_API_KEY || "AIzaSyBRMYh1HGLzVClcnu61ZGSDFgN8683YX7k"}`
+                    `https://maps.googleapis.com/maps/api/place/details/json?place_id=${id}&key=${process.env.GOOGLE_MAPS_API_KEY}`
                 );
 
                 if (googleRes.data.status === 'OK') {
@@ -278,7 +278,7 @@ app.get('/api/listings/:id/reviews', async (req, res) => {
         if (listing && listing.googlePlaceId) {
             try {
                 const googleRes = await axios.get(
-                    `https://maps.googleapis.com/maps/api/place/details/json?place_id=${listing.googlePlaceId}&fields=reviews&key=${process.env.GOOGLE_MAPS_API_KEY || "AIzaSyBRMYh1HGLzVClcnu61ZGSDFgN8683YX7k"}`
+                    `https://maps.googleapis.com/maps/api/place/details/json?place_id=${listing.googlePlaceId}&fields=reviews&key=${process.env.GOOGLE_MAPS_API_KEY}`
                 );
 
                 if (googleRes.data.status === 'OK' && googleRes.data.result.reviews) {

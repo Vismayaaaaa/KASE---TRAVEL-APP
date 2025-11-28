@@ -3,7 +3,7 @@ const axios = require('axios');
 const { Listing } = require('./models');
 require('dotenv').config();
 
-const GOOGLE_API_KEY = process.env.GOOGLE_MAPS_API_KEY || "AIzaSyBRMYh1HGLzVClcnu61ZGSDFgN8683YX7k"; // Fallback if env not loaded
+const GOOGLE_API_KEY = process.env.GOOGLE_MAPS_API_KEY; // Fallback if env not loaded
 
 // Helper to generate random details
 const getRandomDetails = () => {

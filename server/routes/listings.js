@@ -4,7 +4,7 @@ const axios = require('axios');
 const { Listing, Review } = require('../models');
 require('dotenv').config();
 
-const GOOGLE_API_KEY = process.env.GOOGLE_MAPS_API_KEY || "AIzaSyBRMYh1HGLzVClcnu61ZGSDFgN8683YX7k";
+const GOOGLE_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
 
 const categories = [
     'Beach', 'Windmills', 'Modern', 'Countryside', 'Pools', 'Islands', 'Lake',

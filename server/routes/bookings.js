@@ -4,7 +4,7 @@ const { Booking, Listing } = require('../models');
 const axios = require('axios');
 require('dotenv').config();
 
-const GOOGLE_API_KEY = process.env.GOOGLE_MAPS_API_KEY || "AIzaSyBRMYh1HGLzVClcnu61ZGSDFgN8683YX7k";
+const GOOGLE_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
 
 // Helper to resolve listing ID (handles Google Place IDs)
 const resolveListingId = async (id) => {
