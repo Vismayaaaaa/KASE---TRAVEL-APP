@@ -52,7 +52,7 @@ const AdminLayout = () => {
                             boxShadow: '0 4px 12px rgba(255, 56, 92, 0.3)'
                         }}>A</div>
                         <div>
-                            <div style={{ fontSize: '20px', fontWeight: '800', letterSpacing: '-0.5px' }}>Shalu Admin</div>
+                            <div style={{ fontSize: '20px', fontWeight: '800', letterSpacing: '-0.5px' }}>Roam Admin</div>
                             <div style={{ fontSize: '12px', opacity: 0.5, fontWeight: '500', textTransform: 'uppercase', letterSpacing: '1px' }}>Dashboard</div>
                         </div>
                     </Link>

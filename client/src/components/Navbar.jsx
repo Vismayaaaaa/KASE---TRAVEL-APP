@@ -82,7 +82,7 @@ const Navbar = () => {
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent'
               }}>
-                Shalu bbg
+                Roam
               </span>
             </Link>
 
