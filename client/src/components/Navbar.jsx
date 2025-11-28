@@ -51,7 +51,7 @@ const Navbar = () => {
         style={{
           position: 'sticky',
           top: 0,
-          backgroundColor: isScrolled ? 'rgba(255, 255, 255, 0.8)' : 'transparent',
+          backgroundColor: isScrolled ? 'rgba(255, 255, 255, 0.95)' : 'transparent',
           backdropFilter: isScrolled ? 'blur(20px)' : 'none',
           zIndex: 1000,
           transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -70,16 +70,16 @@ const Navbar = () => {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-                <img src={pngLogo} alt="Aanandham.go Logo" style={{ width: '48px', height: '48px', objectFit: 'contain' }} />
+                <img src={pngLogo} alt="Aanandham.go Logo" style={{ width: '130px', height: '70px', objectFit: 'contain' }} />
               </div>
               <span style={{
-                color: 'var(--primary)',
-                fontSize: '24px',
-                fontWeight: '800',
+                color: '#1a1a1a',
+                fontSize: '25px',
+                fontWeight: '900',
                 letterSpacing: '-0.5px',
-                background: 'var(--primary-gradient)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent'
+                // background: 'var(--primary-gradient)',
+                // WebkitBackgroundClip: 'text',
+                // WebkitTextFillColor: 'transparent'
               }}>
                 aanandham.go
               </span>
@@ -102,7 +102,7 @@ const Navbar = () => {
                 onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--bg-off-white)'}
                 onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
               >
-                <FaGlobe size={16} color="var(--text-main)" />
+                <FaGlobe size={16} color="#1a1a1a" />
               </div>
 
               <div style={{ position: 'relative' }}>
@@ -128,11 +128,11 @@ const Navbar = () => {
                   }}
                   onClick={() => setIsMenuOpen(!isMenuOpen)}
                 >
-                  <FaBars size={16} color="var(--text-main)" />
+                  <FaBars size={16} color="#1a1a1a" />
                   {user && user.avatar ? (
                     <img src={user.avatar} alt="User" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }} />
                   ) : (
-                    <FaUserCircle size={32} color="var(--text-light)" />
+                    <FaUserCircle size={32} color="#1a1a1a" />
                   )}
                 </div>
 
