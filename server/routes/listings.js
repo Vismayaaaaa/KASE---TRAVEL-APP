@@ -182,7 +182,7 @@ router.get('/', async (req, res) => {
         // However, we can fetch and then filter in memory.
         if (listings.length < 5) {
             try {
-                const searchTerm = search || (category ? `lodging near ${category}` : 'lodging');
+                const searchTerm = search ? `hotels in ${search}` : (category ? `lodging near ${category}` : 'lodging');
                 console.log(`Fetching from Google for: ${searchTerm}`);
 
                 const googleRes = await axios.get(
