@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { FaHome, FaUsers, FaCalendarCheck, FaList, FaStar, FaSignOutAlt, FaChartBar, FaCompass } from 'react-icons/fa';
 import { authAPI } from '../../services/api';
+import pngLogo from '../../assets/pnglogo.png';
 
 const AdminLayout = () => {
     const location = useLocation();
@@ -42,17 +43,14 @@ const AdminLayout = () => {
                         <div style={{
                             width: '48px',
                             height: '48px',
-                            background: 'linear-gradient(135deg, #FF385C 0%, #E61E4D 100%)',
-                            borderRadius: '14px',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            fontWeight: '800',
-                            fontSize: '24px',
-                            boxShadow: '0 4px 12px rgba(255, 56, 92, 0.3)'
-                        }}>A</div>
+                        }}>
+                            <img src={pngLogo} alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                        </div>
                         <div>
-                            <div style={{ fontSize: '20px', fontWeight: '800', letterSpacing: '-0.5px' }}>Roam Admin</div>
+                            <div style={{ fontSize: '20px', fontWeight: '800', letterSpacing: '-0.5px' }}>aanandham.go Admin</div>
                             <div style={{ fontSize: '12px', opacity: 0.5, fontWeight: '500', textTransform: 'uppercase', letterSpacing: '1px' }}>Dashboard</div>
                         </div>
                     </Link>

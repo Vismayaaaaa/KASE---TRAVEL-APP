@@ -62,7 +62,7 @@ const Navbar = () => {
         <div className="container">
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: isScrolled ? 0 : '16px' }}>
             {/* Logo - New Brand */}
-            <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1, textDecoration: 'none' }}>
+            <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1, textDecoration: 'none' }}>
               <div style={{
                 padding: '0',
                 borderRadius: '0',
@@ -70,18 +70,18 @@ const Navbar = () => {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-                <img src={pngLogo} alt="Roam Logo" style={{ width: '32px', height: '32px', objectFit: 'contain' }} />
+                <img src={pngLogo} alt="Aanandham.go Logo" style={{ width: '48px', height: '48px', objectFit: 'contain' }} />
               </div>
               <span style={{
                 color: 'var(--primary)',
-                fontSize: '22px',
+                fontSize: '24px',
                 fontWeight: '800',
                 letterSpacing: '-0.5px',
                 background: 'var(--primary-gradient)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent'
               }}>
-                Roam
+                aanandham.go
               </span>
             </Link>
 
