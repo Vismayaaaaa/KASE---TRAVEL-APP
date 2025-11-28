@@ -33,7 +33,10 @@ app.use(express.json({ limit: '10kb' }));
 
 // Middleware
 app.use(cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    origin: [
+        process.env.CLIENT_URL || 'http://localhost:5173',
+        'https://booking-site-react.vercel.app' // Add your Vercel URL explicitly
+    ],
     credentials: true
 }));
 
