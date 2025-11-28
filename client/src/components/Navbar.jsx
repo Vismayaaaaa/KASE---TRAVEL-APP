@@ -98,7 +98,7 @@ const Navbar = () => {
 
             {/* Right Section: User Menu */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <a href="https://github.com/shalu-2004" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', color: 'inherit', textDecoration: 'none' }}>
+              <a href="https://github.com/AmanTShekar" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', color: 'inherit', textDecoration: 'none' }}>
                 <div style={{ padding: '10px', borderRadius: '50%', cursor: 'pointer', transition: 'background 0.2s' }}
                   onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--bg-off-white)'}
                   onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
@@ -178,7 +178,7 @@ const Navbar = () => {
                           <MenuItem onClick={() => { navigate('/signup'); setIsMenuOpen(false); }} bold>{t('signup')}</MenuItem>
                           <MenuItem onClick={() => { navigate('/login'); setIsMenuOpen(false); }}>{t('login')}</MenuItem>
                           <div style={{ height: '1px', backgroundColor: 'var(--border-light)', margin: '8px 0' }}></div>
-                          <MenuItem onClick={() => window.open('https://github.com/shalu-2004', '_blank')}>GitHub</MenuItem>
+                          <MenuItem onClick={() => window.open('https://github.com/AmanTShekar', '_blank')}>GitHub</MenuItem>
                           <MenuItem>Help Center</MenuItem>
                         </>
                       )}
