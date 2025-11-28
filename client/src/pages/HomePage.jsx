@@ -143,7 +143,7 @@ const HomePage = () => {
                     bottom: '48px',
                     left: '50%',
                     transform: 'translateX(-50%)',
-                    zIndex: 100,
+                    zIndex: 2000,
                     background: 'var(--primary-gradient)',
                     color: 'white',
                     padding: '14px 24px',
