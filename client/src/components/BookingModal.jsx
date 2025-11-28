@@ -7,7 +7,7 @@ import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { format } from 'date-fns';
 
-const BookingModal = ({ isOpen, onClose, listing, isExperience = false }) => {
+const BookingModal = ({ isOpen, onClose, listing, isExperience = false, isPackage = false }) => {
     const [step, setStep] = useState('details'); // details, payment, receipt
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
@@ -22,14 +22,14 @@ const BookingModal = ({ isOpen, onClose, listing, isExperience = false }) => {
     const user = authAPI.getCurrentUser();
 
     const calculateNights = () => {
-        if (isExperience) return 1;
+        if (isExperience || isPackage) return 1;
         if (!startDate || !endDate) return 0;
         const nights = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
         return nights > 0 ? nights : 0;
     };
 
     const calculateTotal = () => {
-        if (isExperience) {
+        if (isExperience || isPackage) {
             return listing.price * guests;
         }
         return calculateNights() * listing.price;
@@ -303,7 +303,7 @@ const BookingModal = ({ isOpen, onClose, listing, isExperience = false }) => {
                         <>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
                                 <h2 style={{ fontSize: '24px', fontWeight: '700', color: 'var(--text-main)' }}>
-                                    {user ? t('bookStay') : t('guestCheckout')}
+                                    {user ? (isPackage ? 'Book Package' : t('bookStay')) : t('guestCheckout')}
                                 </h2>
                                 <button
                                     onClick={handleClose}
@@ -337,7 +337,7 @@ const BookingModal = ({ isOpen, onClose, listing, isExperience = false }) => {
                                         </h3>
                                         <p style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>{listing.location}</p>
                                         <p style={{ fontSize: '18px', fontWeight: '700', color: 'var(--primary)', marginTop: '4px' }}>
-                                            {formatPrice(listing.price)} / {t('night')}
+                                            {formatPrice(listing.price)} / {isPackage ? 'person' : t('night')}
                                         </p>
                                     </div>
                                 </div>
@@ -398,7 +398,7 @@ const BookingModal = ({ isOpen, onClose, listing, isExperience = false }) => {
                             <div style={{ marginBottom: '24px' }}>
                                 <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '12px', color: 'var(--text-main)' }}>
                                     <FaCalendar style={{ marginRight: '8px' }} />
-                                    {isExperience ? 'Date' : t('dates')}
+                                    {isExperience || isPackage ? 'Date' : t('dates')}
                                 </label>
                                 <div style={{
                                     display: 'flex',
@@ -411,7 +411,7 @@ const BookingModal = ({ isOpen, onClose, listing, isExperience = false }) => {
                                     <DatePicker
                                         selected={startDate}
                                         onChange={(date) => {
-                                            if (isExperience) {
+                                            if (isExperience || isPackage) {
                                                 setStartDate(date);
                                                 setEndDate(date);
                                             } else {
@@ -422,14 +422,14 @@ const BookingModal = ({ isOpen, onClose, listing, isExperience = false }) => {
                                         }}
                                         startDate={startDate}
                                         endDate={endDate}
-                                        selectsRange={!isExperience}
+                                        selectsRange={!isExperience && !isPackage}
                                         inline
                                         minDate={new Date()}
                                         monthsShown={1}
                                         dateFormat="yyyy/MM/dd"
                                     />
                                 </div>
-                                {!isExperience && (
+                                {!isExperience && !isPackage && (
                                     <div style={{
                                         display: 'flex',
                                         justifyContent: 'space-between',
@@ -447,7 +447,7 @@ const BookingModal = ({ isOpen, onClose, listing, isExperience = false }) => {
                                         </div>
                                     </div>
                                 )}
-                                {isExperience && startDate && (
+                                {(isExperience || isPackage) && startDate && (
                                     <div style={{ marginTop: '12px', textAlign: 'center', fontWeight: '600', color: 'var(--text-main)' }}>
                                         {format(startDate, 'MMM dd, yyyy')}
                                     </div>
@@ -479,7 +479,7 @@ const BookingModal = ({ isOpen, onClose, listing, isExperience = false }) => {
                                 />
                             </div>
 
-                            {(isExperience || calculateNights() > 0) && (
+                            {(isExperience || isPackage || calculateNights() > 0) && (
                                 <div style={{
                                     backgroundColor: 'var(--bg-light)',
                                     padding: '16px',
@@ -488,13 +488,13 @@ const BookingModal = ({ isOpen, onClose, listing, isExperience = false }) => {
                                 }}>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
                                         <span style={{ color: 'var(--text-secondary)' }}>
-                                            {isExperience
+                                            {(isExperience || isPackage)
                                                 ? `${formatPrice(listing.price)} x ${guests} guests`
                                                 : `${formatPrice(listing.price)} x ${calculateNights()} ${t('night')}s`
                                             }
                                         </span>
                                         <span style={{ fontWeight: '600', color: 'var(--text-main)' }}>
-                                            {formatPrice(isExperience ? listing.price * guests : listing.price * calculateNights())}
+                                            {formatPrice((isExperience || isPackage) ? listing.price * guests : listing.price * calculateNights())}
                                         </span>
                                     </div>
                                     <div style={{ borderTop: '1px solid var(--border)', paddingTop: '8px', marginTop: '8px' }}>

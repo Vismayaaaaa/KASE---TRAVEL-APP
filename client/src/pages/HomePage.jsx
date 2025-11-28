@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import CategoryBar from '../components/CategoryBar';
 import ListingCard from '../components/ListingCard';
 import SkeletonListingCard from '../components/SkeletonListingCard';
 import GoogleMapComponent from '../components/GoogleMap';
+import CategoryBar from '../components/CategoryBar';
 import FilterModal from '../components/FilterModal';
 import { listingsAPI } from '../services/api';
 import { stayCategories } from '../data/categories';
@@ -53,6 +53,38 @@ const HomePage = () => {
 
     return (
         <div style={{ position: 'relative', minHeight: '100vh' }}>
+            {/* Hero Section */}
+            <div style={{
+                height: '400px',
+                backgroundImage: 'url("https://images.unsplash.com/photo-1501785888041-af3ef285b470?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80")',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                position: 'relative',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'white',
+                textAlign: 'center',
+                marginBottom: '32px'
+            }}>
+                <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background: 'rgba(0,0,0,0.3)'
+                }}></div>
+                <div style={{ position: 'relative', zIndex: 1 }}>
+                    <h1 style={{ fontSize: '48px', fontWeight: '800', marginBottom: '16px', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>
+                        Find Your Perfect Stay
+                    </h1>
+                    <p style={{ fontSize: '20px', fontWeight: '500', maxWidth: '600px', margin: '0 auto' }}>
+                        Discover homes, cabins, and unique stays around the world.
+                    </p>
+                </div>
+            </div>
+
             <CategoryBar
                 categories={stayCategories}
                 selectedCategory={selectedCategory}

@@ -1,4 +1,5 @@
 const express = require('express');
+const fs = require('fs');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
@@ -8,14 +9,17 @@ const rateLimit = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
+const path = require('path');
+const axios = require('axios');
 require('dotenv').config();
 
 const { User, Listing, Booking, Experience, Review, Wishlist } = require('./models');
 const bookingRoutes = require('./routes/bookings');
 const listingRoutes = require('./routes/listings');
 const wishlistRoutes = require('./routes/wishlists');
-
-const path = require('path');
+const destinationRoutes = require('./routes/destinations');
+const packageRoutes = require('./routes/packages');
+const guideRoutes = require('./routes/guides');
 
 const app = express();
 
@@ -24,26 +28,8 @@ const app = express();
 // Set security HTTP headers
 app.use(helmet());
 
-// Limit requests from same API
-// const limiter = rateLimit({
-//     max: 100, // 100 requests per hour
-//     windowMs: 60 * 60 * 1000,
-//     message: 'Too many requests from this IP, please try again in an hour!'
-// });
-// app.use('/api', limiter);
-
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));
-
-// Data sanitization against NoSQL query injection
-// TODO: Re-enable security middleware after configuring them correctly for the environment
-// app.use(mongoSanitize());
-
-// Data sanitization against XSS
-// app.use(xss());
-
-// Prevent parameter pollution
-// app.use(hpp());
 
 // Middleware
 app.use(cors({
@@ -51,9 +37,12 @@ app.use(cors({
     credentials: true
 }));
 
-// Serve static files in production
+// Serve static files in production if they exist
 if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, '../client/dist')));
+    const clientBuildPath = path.join(__dirname, '../client/dist');
+    if (fs.existsSync(clientBuildPath)) {
+        app.use(express.static(clientBuildPath));
+    }
 }
 
 // MongoDB Connection
@@ -89,6 +78,9 @@ const adminAuth = (req, res, next) => {
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/listings', listingRoutes);
 app.use('/api/wishlists', wishlistRoutes);
+app.use('/api/destinations', destinationRoutes);
+app.use('/api/packages', packageRoutes);
+app.use('/api/guides', guideRoutes);
 
 // ==================== AUTH ROUTES ====================
 app.post('/api/auth/register', async (req, res) => {
@@ -491,9 +483,12 @@ app.delete('/api/admin/reviews/:id', auth, adminAuth, async (req, res) => {
 
 // Handle React routing, return all requests to React app
 if (process.env.NODE_ENV === 'production') {
-    app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname, '../client/dist/index.html'));
-    });
+    const clientBuildPath = path.join(__dirname, '../client/dist');
+    if (fs.existsSync(clientBuildPath)) {
+        app.get('*', (req, res) => {
+            res.sendFile(path.join(clientBuildPath, 'index.html'));
+        });
+    }
 }
 
 const PORT = process.env.PORT || 5000;

@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import { FaStar, FaHeart, FaRegHeart } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { usePreferences } from '../contexts/PreferencesContext';
 import { wishlistAPI, authAPI } from '../services/api';
 
-const ListingCard = ({ listing }) => {
+const ListingCard = memo(({ listing }) => {
     // Ensure listing exists to prevent crashes
     if (!listing) return null;
 
@@ -116,6 +116,7 @@ const ListingCard = ({ listing }) => {
                 <img
                     src={listing.image}
                     alt={listing.title || listing.location}
+                    loading="lazy"
                     style={{
                         width: '100%',
                         height: '100%',
@@ -218,6 +219,6 @@ const ListingCard = ({ listing }) => {
             </div>
         </Link>
     );
-};
+});
 
 export default ListingCard;

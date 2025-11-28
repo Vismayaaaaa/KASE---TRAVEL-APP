@@ -100,49 +100,50 @@ const AdminUsers = () => {
                     animate={{ opacity: 1, y: 0 }}
                     style={{
                         backgroundColor: 'white',
-                        borderRadius: '16px',
-                        padding: '24px',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-                        border: '1px solid #E8E8E8'
+                        borderRadius: '20px',
+                        padding: '32px',
+                        boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
+                        border: '1px solid rgba(0,0,0,0.05)'
                     }}
                 >
-                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                    <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: '0 12px' }}>
                         <thead>
-                            <tr style={{ borderBottom: '2px solid #E8E8E8' }}>
-                                <th style={{ padding: '16px', textAlign: 'left', fontSize: '13px', fontWeight: '600', color: '#717171' }}>User</th>
-                                <th style={{ padding: '16px', textAlign: 'left', fontSize: '13px', fontWeight: '600', color: '#717171' }}>Email</th>
-                                <th style={{ padding: '16px', textAlign: 'left', fontSize: '13px', fontWeight: '600', color: '#717171' }}>Role</th>
-                                <th style={{ padding: '16px', textAlign: 'left', fontSize: '13px', fontWeight: '600', color: '#717171' }}>Joined</th>
-                                <th style={{ padding: '16px', textAlign: 'center', fontSize: '13px', fontWeight: '600', color: '#717171' }}>Actions</th>
+                            <tr>
+                                <th style={{ padding: '0 16px', textAlign: 'left', fontSize: '12px', fontWeight: '700', color: '#888', textTransform: 'uppercase', letterSpacing: '0.5px' }}>User</th>
+                                <th style={{ padding: '0 16px', textAlign: 'left', fontSize: '12px', fontWeight: '700', color: '#888', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Email</th>
+                                <th style={{ padding: '0 16px', textAlign: 'left', fontSize: '12px', fontWeight: '700', color: '#888', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Role</th>
+                                <th style={{ padding: '0 16px', textAlign: 'left', fontSize: '12px', fontWeight: '700', color: '#888', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Joined</th>
+                                <th style={{ padding: '0 16px', textAlign: 'center', fontSize: '12px', fontWeight: '700', color: '#888', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {filteredUsers.map((user) => (
-                                <tr key={user._id} style={{ borderBottom: '1px solid #F0F0F0' }}>
-                                    <td style={{ padding: '16px' }}>
+                                <tr key={user._id} style={{ transition: 'transform 0.2s' }}>
+                                    <td style={{ padding: '16px', background: '#f9f9fc', borderRadius: '12px 0 0 12px' }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                                             <div style={{
                                                 width: '40px',
                                                 height: '40px',
                                                 borderRadius: '50%',
-                                                backgroundColor: user.role === 'admin' ? '#667eea' : '#FF385C',
+                                                background: user.role === 'admin' ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' : 'linear-gradient(135deg, #FF385C 0%, #E61E4D 100%)',
                                                 display: 'flex',
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
                                                 color: 'white',
-                                                fontWeight: '700'
+                                                fontWeight: '700',
+                                                boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
                                             }}>
                                                 {user.name.charAt(0)}
                                             </div>
-                                            <span style={{ fontSize: '14px', fontWeight: '600', color: '#222' }}>
+                                            <span style={{ fontSize: '14px', fontWeight: '700', color: '#333' }}>
                                                 {user.name}
                                             </span>
                                         </div>
                                     </td>
-                                    <td style={{ padding: '16px', fontSize: '14px', color: '#717171' }}>
+                                    <td style={{ padding: '16px', background: '#f9f9fc', fontSize: '14px', color: '#555' }}>
                                         {user.email}
                                     </td>
-                                    <td style={{ padding: '16px' }}>
+                                    <td style={{ padding: '16px', background: '#f9f9fc' }}>
                                         <select
                                             value={user.role}
                                             onChange={(e) => handleRoleChange(user._id, e.target.value)}
@@ -154,24 +155,25 @@ const AdminUsers = () => {
                                                 fontWeight: '600',
                                                 backgroundColor: user.role === 'admin' ? '#E8EAFF' : '#FFE8EC',
                                                 color: user.role === 'admin' ? '#667eea' : '#FF385C',
-                                                cursor: 'pointer'
+                                                cursor: 'pointer',
+                                                outline: 'none'
                                             }}
                                         >
                                             <option value="user">User</option>
                                             <option value="admin">Admin</option>
                                         </select>
                                     </td>
-                                    <td style={{ padding: '16px', fontSize: '14px', color: '#717171' }}>
+                                    <td style={{ padding: '16px', background: '#f9f9fc', fontSize: '14px', color: '#777' }}>
                                         {new Date(user.createdAt).toLocaleDateString()}
                                     </td>
-                                    <td style={{ padding: '16px', textAlign: 'center' }}>
+                                    <td style={{ padding: '16px', background: '#f9f9fc', borderRadius: '0 12px 12px 0', textAlign: 'center' }}>
                                         <button
                                             onClick={() => handleDeleteUser(user._id)}
                                             style={{
                                                 padding: '8px 16px',
-                                                backgroundColor: '#FFE8EC',
+                                                backgroundColor: 'rgba(255, 56, 92, 0.1)',
                                                 border: 'none',
-                                                borderRadius: '8px',
+                                                borderRadius: '10px',
                                                 color: '#FF385C',
                                                 fontSize: '13px',
                                                 fontWeight: '600',
@@ -181,8 +183,14 @@ const AdminUsers = () => {
                                                 gap: '6px',
                                                 transition: 'all 0.2s ease'
                                             }}
-                                            onMouseEnter={(e) => e.target.style.backgroundColor = '#FFD4DC'}
-                                            onMouseLeave={(e) => e.target.style.backgroundColor = '#FFE8EC'}
+                                            onMouseEnter={(e) => {
+                                                e.currentTarget.style.backgroundColor = '#FF385C';
+                                                e.currentTarget.style.color = 'white';
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                e.currentTarget.style.backgroundColor = 'rgba(255, 56, 92, 0.1)';
+                                                e.currentTarget.style.color = '#FF385C';
+                                            }}
                                         >
                                             <FaTrash size={12} />
                                             Delete

@@ -63,6 +63,75 @@ const transformGooglePlace = (place, forcedCategory = null) => {
     };
 };
 
+// GET /api/listings/search/bounds
+router.get('/search/bounds', async (req, res) => {
+    try {
+        const { north, south, east, west } = req.query;
+
+        if (!north || !south || !east || !west) {
+            return res.status(400).json({ message: 'Missing bounds parameters' });
+        }
+
+        const n = parseFloat(north);
+        const s = parseFloat(south);
+        const e = parseFloat(east);
+        const w = parseFloat(west);
+
+        // 1. Search Local DB
+        // Note: This assumes simple box query. For crossing dateline, logic needs adjustment.
+        let query = {
+            latitude: { $lte: n, $gte: s },
+            longitude: { $lte: e, $gte: w }
+        };
+
+        let listings = await Listing.find(query).limit(20);
+
+        // 2. Fetch from Google Places if we need more results
+        // We'll calculate a center point and a radius that covers the box roughly
+        if (listings.length < 10) {
+            try {
+                const centerLat = (n + s) / 2;
+                const centerLng = (e + w) / 2;
+
+                // Estimate radius in meters (rough approximation)
+                // 1 degree lat is ~111km. 
+                const latDiff = n - s;
+                const radius = Math.max(Math.abs(latDiff) * 111000 / 2, 5000); // Min 5km
+
+                const googleRes = await axios.get(
+                    `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${centerLat},${centerLng}&radius=${radius}&type=lodging&key=${GOOGLE_API_KEY}`
+                );
+
+                if (googleRes.data.status === 'OK') {
+                    const externalListings = googleRes.data.results
+                        .map(place => {
+                            const transformed = transformGooglePlace(place);
+                            return { ...transformed, _id: place.place_id };
+                        });
+
+                    // Filter out duplicates and those outside bounds (Google radius is circular)
+                    const existingIds = new Set(listings.map(l => l.googlePlaceId || l._id.toString()));
+
+                    const newExternalListings = externalListings.filter(l => {
+                        if (existingIds.has(l.googlePlaceId)) return false;
+                        // Check bounds
+                        return l.latitude <= n && l.latitude >= s && l.longitude <= e && l.longitude >= w;
+                    });
+
+                    listings = [...listings, ...newExternalListings];
+                }
+            } catch (googleErr) {
+                console.error('Google API Error (Bounds):', googleErr.message);
+            }
+        }
+
+        res.json(listings);
+    } catch (error) {
+        console.error('Bounds Search Error:', error);
+        res.status(500).json({ message: error.message });
+    }
+});
+
 // GET /api/listings (with search, category, and filters support)
 router.get('/', async (req, res) => {
     try {

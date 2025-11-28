@@ -27,37 +27,40 @@ const AdminLayout = () => {
             {/* Sidebar */}
             <div style={{
                 width: '280px',
-                backgroundColor: '#1a1a2e',
+                background: 'linear-gradient(180deg, #1a1a2e 0%, #16213e 100%)',
                 color: 'white',
                 display: 'flex',
                 flexDirection: 'column',
                 position: 'fixed',
                 height: '100vh',
-                boxShadow: '4px 0 12px rgba(0,0,0,0.1)'
+                boxShadow: '4px 0 24px rgba(0,0,0,0.15)',
+                zIndex: 100
             }}>
                 {/* Logo */}
-                <div style={{ padding: '32px 24px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-                    <Link to="/" style={{ textDecoration: 'none', color: 'white', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ padding: '32px 24px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                    <Link to="/" style={{ textDecoration: 'none', color: 'white', display: 'flex', alignItems: 'center', gap: '16px' }}>
                         <div style={{
-                            width: '40px',
-                            height: '40px',
+                            width: '48px',
+                            height: '48px',
                             background: 'linear-gradient(135deg, #FF385C 0%, #E61E4D 100%)',
-                            borderRadius: '10px',
+                            borderRadius: '14px',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             fontWeight: '800',
-                            fontSize: '20px'
+                            fontSize: '24px',
+                            boxShadow: '0 4px 12px rgba(255, 56, 92, 0.3)'
                         }}>A</div>
                         <div>
-                            <div style={{ fontSize: '18px', fontWeight: '700' }}>Shalus Homestay</div>
-                            <div style={{ fontSize: '12px', opacity: 0.7 }}>Admin Panel</div>
+                            <div style={{ fontSize: '20px', fontWeight: '800', letterSpacing: '-0.5px' }}>Shalu Admin</div>
+                            <div style={{ fontSize: '12px', opacity: 0.5, fontWeight: '500', textTransform: 'uppercase', letterSpacing: '1px' }}>Dashboard</div>
                         </div>
                     </Link>
                 </div>
 
                 {/* Menu Items */}
-                <nav style={{ flex: 1, padding: '24px 0', overflowY: 'auto' }}>
+                <nav style={{ flex: 1, padding: '32px 16px', overflowY: 'auto' }}>
+                    <div style={{ fontSize: '12px', fontWeight: '700', color: 'rgba(255,255,255,0.4)', padding: '0 16px 12px', textTransform: 'uppercase', letterSpacing: '1px' }}>Menu</div>
                     {menuItems.map((item) => {
                         const isActive = item.exact
                             ? location.pathname === item.path
@@ -71,28 +74,34 @@ const AdminLayout = () => {
                                     display: 'flex',
                                     alignItems: 'center',
                                     gap: '16px',
-                                    padding: '14px 24px',
-                                    margin: '4px 12px',
-                                    borderRadius: '12px',
+                                    padding: '16px 20px',
+                                    marginBottom: '8px',
+                                    borderRadius: '16px',
                                     textDecoration: 'none',
-                                    color: isActive ? '#FF385C' : 'rgba(255,255,255,0.8)',
-                                    backgroundColor: isActive ? 'rgba(255,56,92,0.1)' : 'transparent',
+                                    color: isActive ? 'white' : 'rgba(255,255,255,0.7)',
+                                    background: isActive ? 'linear-gradient(90deg, #FF385C 0%, #E61E4D 100%)' : 'transparent',
                                     fontWeight: isActive ? '600' : '500',
                                     fontSize: '15px',
-                                    transition: 'all 0.2s ease'
+                                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                                    boxShadow: isActive ? '0 4px 12px rgba(255, 56, 92, 0.3)' : 'none',
+                                    transform: isActive ? 'translateX(4px)' : 'none'
                                 }}
                                 onMouseEnter={(e) => {
                                     if (!isActive) {
-                                        e.target.style.backgroundColor = 'rgba(255,255,255,0.05)';
+                                        e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.05)';
+                                        e.currentTarget.style.color = 'white';
+                                        e.currentTarget.style.transform = 'translateX(4px)';
                                     }
                                 }}
                                 onMouseLeave={(e) => {
                                     if (!isActive) {
-                                        e.target.style.backgroundColor = 'transparent';
+                                        e.currentTarget.style.backgroundColor = 'transparent';
+                                        e.currentTarget.style.color = 'rgba(255,255,255,0.7)';
+                                        e.currentTarget.style.transform = 'none';
                                     }
                                 }}
                             >
-                                <item.icon size={20} />
+                                <item.icon size={20} style={{ opacity: isActive ? 1 : 0.8 }} />
                                 {item.label}
                             </Link>
                         );
@@ -100,45 +109,53 @@ const AdminLayout = () => {
                 </nav>
 
                 {/* User Info & Logout */}
-                <div style={{ padding: '24px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                <div style={{ padding: '24px', borderTop: '1px solid rgba(255,255,255,0.05)', background: 'rgba(0,0,0,0.2)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '20px' }}>
                         <div style={{
-                            width: '40px',
-                            height: '40px',
+                            width: '48px',
+                            height: '48px',
                             borderRadius: '50%',
-                            backgroundColor: '#FF385C',
+                            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            fontWeight: '700'
+                            fontWeight: '700',
+                            fontSize: '18px',
+                            boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
                         }}>
                             {user?.name?.charAt(0) || 'A'}
                         </div>
-                        <div>
-                            <div style={{ fontSize: '14px', fontWeight: '600' }}>{user?.name || 'Admin'}</div>
-                            <div style={{ fontSize: '12px', opacity: 0.7 }}>{user?.email}</div>
+                        <div style={{ overflow: 'hidden' }}>
+                            <div style={{ fontSize: '15px', fontWeight: '700', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user?.name || 'Admin'}</div>
+                            <div style={{ fontSize: '12px', opacity: 0.6, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user?.email}</div>
                         </div>
                     </div>
                     <button
                         onClick={handleLogout}
                         style={{
                             width: '100%',
-                            padding: '12px',
-                            backgroundColor: 'rgba(255,255,255,0.1)',
-                            border: 'none',
-                            borderRadius: '8px',
-                            color: 'white',
+                            padding: '14px',
+                            backgroundColor: 'rgba(255,255,255,0.08)',
+                            border: '1px solid rgba(255,255,255,0.05)',
+                            borderRadius: '12px',
+                            color: '#ff4d4d',
                             fontSize: '14px',
                             fontWeight: '600',
                             cursor: 'pointer',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            gap: '8px',
+                            gap: '10px',
                             transition: 'all 0.2s ease'
                         }}
-                        onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(255,255,255,0.15)'}
-                        onMouseLeave={(e) => e.target.style.backgroundColor = 'rgba(255,255,255,0.1)'}
+                        onMouseEnter={(e) => {
+                            e.target.style.backgroundColor = 'rgba(255, 77, 77, 0.1)';
+                            e.target.style.borderColor = 'rgba(255, 77, 77, 0.2)';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.target.style.backgroundColor = 'rgba(255,255,255,0.08)';
+                            e.target.style.borderColor = 'rgba(255,255,255,0.05)';
+                        }}
                     >
                         <FaSignOutAlt size={16} />
                         Logout

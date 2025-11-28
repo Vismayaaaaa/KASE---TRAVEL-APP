@@ -35,22 +35,15 @@ const listingSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 const bookingSchema = new mongoose.Schema({
-    listing: { type: mongoose.Schema.Types.ObjectId, ref: 'Listing', required: true },
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    guest: {
-        name: String,
-        email: String
-    },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    listing: { type: mongoose.Schema.Types.ObjectId, ref: 'Listing' },
+    experience: { type: mongoose.Schema.Types.ObjectId, ref: 'Experience' },
+    package: { type: mongoose.Schema.Types.ObjectId, ref: 'Package' },
     checkIn: { type: Date, required: true },
-    checkOut: { type: Date, required: true },
-    numberOfGuests: {
-        adults: { type: Number, required: true },
-        children: { type: Number, default: 0 },
-        infants: { type: Number, default: 0 },
-        pets: { type: Number, default: 0 }
-    },
+    checkOut: { type: Date },
+    guests: { type: Number, required: true },
     totalPrice: { type: Number, required: true },
-    status: { type: String, enum: ['pending', 'confirmed', 'cancelled'], default: 'confirmed' }
+    status: { type: String, enum: ['pending', 'confirmed', 'cancelled'], default: 'pending' }
 }, { timestamps: true });
 
 const experienceSchema = new mongoose.Schema({
@@ -89,6 +82,41 @@ const wishlistSchema = new mongoose.Schema({
     listing: { type: mongoose.Schema.Types.ObjectId, ref: 'Listing', required: true }
 }, { timestamps: true });
 
+// Destination Schema
+const destinationSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    image: { type: String, required: true },
+    description: { type: String, required: true },
+    details: { type: String },
+    highlights: [String],
+    bestTimeToVisit: String,
+    currency: String,
+    language: String
+}, { timestamps: true });
+
+// Package Schema
+const packageSchema = new mongoose.Schema({
+    title: { type: String, required: true },
+    image: { type: String, required: true },
+    price: { type: Number, required: true },
+    duration: { type: String, required: true }, // e.g., "7 Days"
+    description: { type: String, required: true },
+    itinerary: [{ day: Number, title: String, description: String }],
+    inclusions: [String],
+    exclusions: [String],
+    location: String
+}, { timestamps: true });
+
+// Guide Schema
+const guideSchema = new mongoose.Schema({
+    title: { type: String, required: true },
+    category: { type: String, required: true },
+    image: { type: String, required: true },
+    author: { type: String, default: 'Travel Expert' },
+    date: { type: Date, default: Date.now },
+    content: { type: String, required: true } // HTML or Markdown content
+}, { timestamps: true });
+
 // Create compound index to prevent duplicate wishlist entries
 wishlistSchema.index({ user: 1, listing: 1 }, { unique: true });
 
@@ -98,5 +126,8 @@ module.exports = {
     Booking: mongoose.model('Booking', bookingSchema),
     Experience: mongoose.model('Experience', experienceSchema),
     Review: mongoose.model('Review', reviewSchema),
-    Wishlist: mongoose.model('Wishlist', wishlistSchema)
+    Wishlist: mongoose.model('Wishlist', wishlistSchema),
+    Destination: mongoose.model('Destination', destinationSchema),
+    Package: mongoose.model('Package', packageSchema),
+    Guide: mongoose.model('Guide', guideSchema)
 };

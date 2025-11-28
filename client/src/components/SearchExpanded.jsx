@@ -127,11 +127,11 @@ const SearchExpanded = () => {
                 <span
                     onClick={() => navigate('/')}
                     style={{
-                        fontWeight: !isExperiences ? '600' : '500',
-                        borderBottom: !isExperiences ? '2px solid var(--text-main)' : '2px solid transparent',
+                        fontWeight: pathname === '/' ? '600' : '500',
+                        borderBottom: pathname === '/' ? '2px solid var(--text-main)' : '2px solid transparent',
                         paddingBottom: '8px',
                         cursor: 'pointer',
-                        color: !isExperiences ? 'var(--text-main)' : 'var(--text-secondary)',
+                        color: pathname === '/' ? 'var(--text-main)' : 'var(--text-secondary)',
                         fontSize: '16px',
                         transition: 'all 0.2s ease'
                     }}
@@ -141,16 +141,30 @@ const SearchExpanded = () => {
                 <span
                     onClick={() => navigate('/experiences')}
                     style={{
-                        fontWeight: isExperiences ? '600' : '500',
-                        borderBottom: isExperiences ? '2px solid var(--text-main)' : '2px solid transparent',
+                        fontWeight: pathname === '/experiences' ? '600' : '500',
+                        borderBottom: pathname === '/experiences' ? '2px solid var(--text-main)' : '2px solid transparent',
                         paddingBottom: '8px',
                         cursor: 'pointer',
-                        color: isExperiences ? 'var(--text-main)' : 'var(--text-secondary)',
+                        color: pathname === '/experiences' ? 'var(--text-main)' : 'var(--text-secondary)',
                         fontSize: '16px',
                         transition: 'all 0.2s ease'
                     }}
                 >
                     Experiences
+                </span>
+                <span
+                    onClick={() => navigate('/places')}
+                    style={{
+                        fontWeight: pathname.startsWith('/places') ? '600' : '500',
+                        borderBottom: pathname.startsWith('/places') ? '2px solid var(--text-main)' : '2px solid transparent',
+                        paddingBottom: '8px',
+                        cursor: 'pointer',
+                        color: pathname.startsWith('/places') ? 'var(--text-main)' : 'var(--text-secondary)',
+                        fontSize: '16px',
+                        transition: 'all 0.2s ease'
+                    }}
+                >
+                    Places
                 </span>
             </div>
 

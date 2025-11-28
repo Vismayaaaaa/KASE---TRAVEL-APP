@@ -91,14 +91,18 @@ const AdminListings = () => {
                         <button
                             onClick={() => setIsModalOpen(true)}
                             style={{
-                                padding: '10px 20px',
-                                backgroundColor: '#222',
+                                padding: '12px 24px',
+                                background: 'linear-gradient(135deg, #222 0%, #333 100%)',
                                 color: 'white',
                                 border: 'none',
-                                borderRadius: '8px',
+                                borderRadius: '12px',
                                 fontWeight: '600',
-                                cursor: 'pointer'
+                                cursor: 'pointer',
+                                boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+                                transition: 'transform 0.2s'
                             }}
+                            onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
+                            onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
                         >
                             + Add Listing
                         </button>
@@ -219,60 +223,60 @@ const AdminListings = () => {
                     animate={{ opacity: 1, y: 0 }}
                     style={{
                         backgroundColor: 'white',
-                        borderRadius: '16px',
-                        padding: '24px',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-                        border: '1px solid #E8E8E8'
+                        borderRadius: '20px',
+                        padding: '32px',
+                        boxShadow: '0 4px 20px rgba(0,0,0,0.05)',
+                        border: '1px solid rgba(0,0,0,0.05)'
                     }}
                 >
-                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                    <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: '0 12px' }}>
                         <thead>
-                            <tr style={{ borderBottom: '2px solid #E8E8E8' }}>
-                                <th style={{ padding: '16px', textAlign: 'left', fontSize: '13px', fontWeight: '600', color: '#717171' }}>Property</th>
-                                <th style={{ padding: '16px', textAlign: 'left', fontSize: '13px', fontWeight: '600', color: '#717171' }}>Location</th>
-                                <th style={{ padding: '16px', textAlign: 'left', fontSize: '13px', fontWeight: '600', color: '#717171' }}>Price</th>
-                                <th style={{ padding: '16px', textAlign: 'left', fontSize: '13px', fontWeight: '600', color: '#717171' }}>Rating</th>
-                                <th style={{ padding: '16px', textAlign: 'center', fontSize: '13px', fontWeight: '600', color: '#717171' }}>Actions</th>
+                            <tr>
+                                <th style={{ padding: '0 16px', textAlign: 'left', fontSize: '12px', fontWeight: '700', color: '#888', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Property</th>
+                                <th style={{ padding: '0 16px', textAlign: 'left', fontSize: '12px', fontWeight: '700', color: '#888', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Location</th>
+                                <th style={{ padding: '0 16px', textAlign: 'left', fontSize: '12px', fontWeight: '700', color: '#888', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Price</th>
+                                <th style={{ padding: '0 16px', textAlign: 'left', fontSize: '12px', fontWeight: '700', color: '#888', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Rating</th>
+                                <th style={{ padding: '0 16px', textAlign: 'center', fontSize: '12px', fontWeight: '700', color: '#888', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {filteredListings.map((listing) => (
-                                <tr key={listing._id} style={{ borderBottom: '1px solid #F0F0F0' }}>
-                                    <td style={{ padding: '16px' }}>
+                                <tr key={listing._id} style={{ transition: 'transform 0.2s' }}>
+                                    <td style={{ padding: '16px', background: '#f9f9fc', borderRadius: '12px 0 0 12px' }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                                             <img
                                                 src={listing.image}
                                                 alt={listing.title}
-                                                style={{ width: '60px', height: '40px', borderRadius: '4px', objectFit: 'cover' }}
+                                                style={{ width: '60px', height: '40px', borderRadius: '8px', objectFit: 'cover', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}
                                             />
-                                            <span style={{ fontSize: '14px', fontWeight: '600', color: '#222' }}>
+                                            <span style={{ fontSize: '14px', fontWeight: '700', color: '#333' }}>
                                                 {listing.title}
                                             </span>
                                         </div>
                                     </td>
-                                    <td style={{ padding: '16px', fontSize: '14px', color: '#717171' }}>
+                                    <td style={{ padding: '16px', background: '#f9f9fc', fontSize: '14px', color: '#555' }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                            <FaMapMarkerAlt size={12} />
+                                            <FaMapMarkerAlt size={12} color="#FF385C" />
                                             {listing.location}
                                         </div>
                                     </td>
-                                    <td style={{ padding: '16px', fontSize: '14px', fontWeight: '600', color: '#222' }}>
-                                        ${listing.price} <span style={{ fontWeight: '400', color: '#717171' }}>/ night</span>
+                                    <td style={{ padding: '16px', background: '#f9f9fc', fontSize: '14px', fontWeight: '700', color: '#333' }}>
+                                        ${listing.price} <span style={{ fontWeight: '400', color: '#888', fontSize: '12px' }}>/ night</span>
                                     </td>
-                                    <td style={{ padding: '16px', fontSize: '14px', color: '#717171' }}>
+                                    <td style={{ padding: '16px', background: '#f9f9fc', fontSize: '14px', color: '#555' }}>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                            <FaStar color="#FF385C" size={12} />
-                                            {listing.rating}
+                                            <FaStar color="#FFB75E" size={14} />
+                                            <span style={{ fontWeight: '600' }}>{listing.rating}</span>
                                         </div>
                                     </td>
-                                    <td style={{ padding: '16px', textAlign: 'center' }}>
+                                    <td style={{ padding: '16px', background: '#f9f9fc', borderRadius: '0 12px 12px 0', textAlign: 'center' }}>
                                         <button
                                             onClick={() => handleDeleteListing(listing._id)}
                                             style={{
                                                 padding: '8px 16px',
-                                                backgroundColor: '#FFE8EC',
+                                                backgroundColor: 'rgba(255, 56, 92, 0.1)',
                                                 border: 'none',
-                                                borderRadius: '8px',
+                                                borderRadius: '10px',
                                                 color: '#FF385C',
                                                 fontSize: '13px',
                                                 fontWeight: '600',
@@ -282,8 +286,14 @@ const AdminListings = () => {
                                                 gap: '6px',
                                                 transition: 'all 0.2s ease'
                                             }}
-                                            onMouseEnter={(e) => e.target.style.backgroundColor = '#FFD4DC'}
-                                            onMouseLeave={(e) => e.target.style.backgroundColor = '#FFE8EC'}
+                                            onMouseEnter={(e) => {
+                                                e.currentTarget.style.backgroundColor = '#FF385C';
+                                                e.currentTarget.style.color = 'white';
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                e.currentTarget.style.backgroundColor = 'rgba(255, 56, 92, 0.1)';
+                                                e.currentTarget.style.color = '#FF385C';
+                                            }}
                                         >
                                             <FaTrash size={12} />
                                             Delete

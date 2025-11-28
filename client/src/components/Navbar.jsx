@@ -86,7 +86,7 @@ const Navbar = () => {
               </span>
             </Link>
 
-            {/* Center Search - Animated */}
+            {/* Center Section: Search (Scrolled) or Placeholder (Unscrolled) */}
             <div style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
               <AnimatePresence mode="wait">
                 {isScrolled ? (
@@ -97,22 +97,8 @@ const Navbar = () => {
               </AnimatePresence>
             </div>
 
-            {/* User Menu */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1, justifyContent: 'flex-end', position: 'relative' }}>
-              <div style={{
-                fontWeight: '600',
-                cursor: 'pointer',
-                fontSize: '14px',
-                padding: '10px 16px',
-                borderRadius: '22px',
-                transition: 'background 0.2s',
-                color: 'var(--text-main)'
-              }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--bg-off-white)'}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-              >
-                {t('airbnbYourHome')}
-              </div>
+            {/* Right Section: User Menu */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <div style={{ padding: '10px', borderRadius: '50%', cursor: 'pointer', transition: 'background 0.2s' }}
                 onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--bg-off-white)'}
                 onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
@@ -120,95 +106,103 @@ const Navbar = () => {
                 <FaGlobe size={16} color="var(--text-main)" />
               </div>
 
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                border: '1px solid var(--border)',
-                borderRadius: '32px',
-                padding: '6px 6px 6px 14px',
-                cursor: 'pointer',
-                marginLeft: '8px',
-                transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-                backgroundColor: 'white',
-                boxShadow: 'var(--shadow-sm)'
-              }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow = 'var(--shadow-md)';
-                  e.currentTarget.style.transform = 'translateY(-1px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
-                  e.currentTarget.style.transform = 'translateY(0)';
-                }}
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-              >
-                <FaBars size={16} color="var(--text-main)" />
-                {user && user.avatar ? (
-                  <img src={user.avatar} alt="User" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }} />
-                ) : (
-                  <FaUserCircle size={32} color="var(--text-light)" />
-                )}
-              </div>
-
-              {/* Minimal Dropdown Menu */}
-              {isMenuOpen && (
+              <div style={{ position: 'relative' }}>
                 <div style={{
-                  position: 'absolute',
-                  top: 'calc(100% + 16px)',
-                  right: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  border: '1px solid var(--border)',
+                  borderRadius: '32px',
+                  padding: '6px 6px 6px 14px',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
                   backgroundColor: 'white',
-                  borderRadius: 'var(--radius-md)',
-                  boxShadow: 'var(--shadow-xl)',
-                  width: '260px',
-                  padding: '8px 0',
-                  zIndex: 2000,
-                  border: '1px solid var(--border-light)',
-                  overflow: 'hidden',
-                  animation: 'fadeIn 0.2s ease-out'
-                }}>
-                  {user ? (
-                    <>
-                      <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border-light)', marginBottom: '8px' }}>
-                        <div style={{ fontWeight: '700', fontSize: '15px', marginBottom: '4px', color: 'var(--text-main)' }}>{user.name}</div>
-                        <div style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>{user.email}</div>
-                      </div>
-                      <MenuItem onClick={() => { navigate('/trips'); setIsMenuOpen(false); }}>Trips</MenuItem>
-                      <MenuItem onClick={() => { navigate('/wishlists'); setIsMenuOpen(false); }}>Wishlists</MenuItem>
-                      <div style={{ height: '1px', backgroundColor: 'var(--border-light)', margin: '8px 0' }}></div>
-                      <MenuItem onClick={() => { navigate('/account'); setIsMenuOpen(false); }}>Account</MenuItem>
-                      <div style={{ height: '1px', backgroundColor: 'var(--border-light)', margin: '8px 0' }}></div>
-                      <MenuItem onClick={handleLogout} danger>{t('logout')}</MenuItem>
-                    </>
+                  boxShadow: 'var(--shadow-sm)'
+                }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+                    e.currentTarget.style.transform = 'translateY(-1px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                  }}
+                  onClick={() => setIsMenuOpen(!isMenuOpen)}
+                >
+                  <FaBars size={16} color="var(--text-main)" />
+                  {user && user.avatar ? (
+                    <img src={user.avatar} alt="User" style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }} />
                   ) : (
-                    <>
-                      <MenuItem onClick={() => { navigate('/signup'); setIsMenuOpen(false); }} bold>{t('signup')}</MenuItem>
-                      <MenuItem onClick={() => { navigate('/login'); setIsMenuOpen(false); }}>{t('login')}</MenuItem>
-                      <div style={{ height: '1px', backgroundColor: 'var(--border-light)', margin: '8px 0' }}></div>
-                      <MenuItem>{t('help')}</MenuItem>
-                    </>
+                    <FaUserCircle size={32} color="var(--text-light)" />
                   )}
                 </div>
-              )}
+
+                {/* Minimal Dropdown Menu */}
+                <AnimatePresence>
+                  {isMenuOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      transition={{ duration: 0.2 }}
+                      style={{
+                        position: 'absolute',
+                        top: 'calc(100% + 8px)',
+                        right: 0,
+                        backgroundColor: 'white',
+                        borderRadius: 'var(--radius-md)',
+                        boxShadow: 'var(--shadow-xl)',
+                        width: '260px',
+                        padding: '8px 0',
+                        zIndex: 2000,
+                        border: '1px solid var(--border-light)',
+                        overflow: 'hidden'
+                      }}
+                    >
+                      {user ? (
+                        <>
+                          <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border-light)', marginBottom: '8px' }}>
+                            <div style={{ fontWeight: '700', fontSize: '15px', marginBottom: '4px', color: 'var(--text-main)' }}>{user.name}</div>
+                            <div style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>{user.email}</div>
+                          </div>
+                          <MenuItem onClick={() => { navigate('/trips'); setIsMenuOpen(false); }}>Trips</MenuItem>
+                          <MenuItem onClick={() => { navigate('/wishlists'); setIsMenuOpen(false); }}>Wishlists</MenuItem>
+                          <div style={{ height: '1px', backgroundColor: 'var(--border-light)', margin: '8px 0' }}></div>
+                          <MenuItem onClick={() => { navigate('/account'); setIsMenuOpen(false); }}>Account</MenuItem>
+                          <div style={{ height: '1px', backgroundColor: 'var(--border-light)', margin: '8px 0' }}></div>
+                          <MenuItem onClick={handleLogout} danger>{t('logout')}</MenuItem>
+                        </>
+                      ) : (
+                        <>
+                          <MenuItem onClick={() => { navigate('/signup'); setIsMenuOpen(false); }} bold>{t('signup')}</MenuItem>
+                          <MenuItem onClick={() => { navigate('/login'); setIsMenuOpen(false); }}>{t('login')}</MenuItem>
+                          <div style={{ height: '1px', backgroundColor: 'var(--border-light)', margin: '8px 0' }}></div>
+                          <MenuItem>{t('help')}</MenuItem>
+                        </>
+                      )}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             </div>
           </div>
-
-          {/* Expanded Search Container */}
-          <AnimatePresence>
-            {!isScrolled && (
-              <motion.div
-                initial={{ opacity: 0, height: 0, scaleY: 0 }}
-                animate={{ opacity: 1, height: 'auto', scaleY: 1 }}
-                exit={{ opacity: 0, height: 0, scaleY: 0 }}
-                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                style={{ paddingBottom: '24px', transformOrigin: 'top' }}
-              >
-                <SearchExpanded />
-              </motion.div>
-            )}
-          </AnimatePresence>
         </div>
-      </header>
+
+        {/* Expanded Search Container */}
+        <AnimatePresence>
+          {!isScrolled && (
+            <motion.div
+              initial={{ opacity: 0, height: 0, scaleY: 0 }}
+              animate={{ opacity: 1, height: 'auto', scaleY: 1 }}
+              exit={{ opacity: 0, height: 0, scaleY: 0 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              style={{ paddingBottom: '24px', transformOrigin: 'top' }}
+            >
+              <SearchExpanded />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </header >
     </>
   );
 };

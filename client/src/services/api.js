@@ -88,6 +88,23 @@ export const listingsAPI = {
             console.error('Error creating listing:', error);
             throw error;
         }
+    },
+
+    getListingsByBounds: async (bounds) => {
+        try {
+            const response = await axios.get(`${API_URL}/listings/search/bounds`, {
+                params: {
+                    north: bounds.north,
+                    south: bounds.south,
+                    east: bounds.east,
+                    west: bounds.west
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching listings by bounds:', error);
+            throw error;
+        }
     }
 };
 
@@ -267,6 +284,39 @@ export const wishlistAPI = {
         const response = await axios.get(`${API_URL}/wishlists/check/${listingId}`, {
             headers: getAuthHeader()
         });
+        return response.data;
+    }
+};
+
+export const destinationsAPI = {
+    getAllDestinations: async () => {
+        const response = await axios.get(`${API_URL}/destinations`);
+        return response.data;
+    },
+    getDestinationById: async (id) => {
+        const response = await axios.get(`${API_URL}/destinations/${id}`);
+        return response.data;
+    }
+};
+
+export const packagesAPI = {
+    getAllPackages: async () => {
+        const response = await axios.get(`${API_URL}/packages`);
+        return response.data;
+    },
+    getPackageById: async (id) => {
+        const response = await axios.get(`${API_URL}/packages/${id}`);
+        return response.data;
+    }
+};
+
+export const guidesAPI = {
+    getAllGuides: async () => {
+        const response = await axios.get(`${API_URL}/guides`);
+        return response.data;
+    },
+    getGuideById: async (id) => {
+        const response = await axios.get(`${API_URL}/guides/${id}`);
         return response.data;
     }
 };
