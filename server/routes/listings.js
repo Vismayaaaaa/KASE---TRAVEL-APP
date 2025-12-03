@@ -26,11 +26,11 @@ const transformGooglePlace = (place, forcedCategory = null) => {
         );
     }
 
-    let price = Math.floor(Math.random() * 400) + 80; // Default random
+    let price = Math.floor(Math.random() * 36) + 12; // Default random 12-48
     if (place.price_level !== undefined) {
-        const basePrices = { 0: 0, 1: 80, 2: 150, 3: 300, 4: 500 };
-        const base = basePrices[place.price_level] || 100;
-        price = Math.floor(Math.random() * 100) + base;
+        const basePrices = { 0: 0, 1: 12, 2: 20, 3: 30, 4: 40 };
+        const base = basePrices[place.price_level] || 20;
+        price = Math.floor(Math.random() * 8) + base;
     }
 
     const category = forcedCategory || categories[Math.floor(Math.random() * categories.length)];
@@ -136,7 +136,7 @@ router.get('/search/bounds', async (req, res) => {
 router.get('/', async (req, res) => {
     try {
         console.log('GET /api/listings request received');
-        const { search, category, minPrice, maxPrice, type, amenities } = req.query;
+        const { search, category, minPrice, maxPrice, type, amenities, guests } = req.query;
         let listings = [];
 
         // 1. Search Local DB
@@ -149,6 +149,11 @@ router.get('/', async (req, res) => {
         }
         if (category) {
             query.category = category;
+        }
+
+        // Guest Filter
+        if (guests) {
+            query['details.guests'] = { $gte: Number(guests) };
         }
 
         // Price Filter
@@ -184,10 +189,13 @@ router.get('/', async (req, res) => {
             try {
                 const searchTerm = search ? `hotels in ${search}` : (category ? `lodging near ${category}` : 'lodging');
                 console.log(`Fetching from Google for: ${searchTerm}`);
+                console.log(`Using API Key: ${GOOGLE_API_KEY ? 'Present' : 'Missing'}`);
 
                 const googleRes = await axios.get(
                     `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(searchTerm)}&key=${GOOGLE_API_KEY}`
                 );
+
+                console.log('Google API Status:', googleRes.data.status);
 
                 if (googleRes.data.status === 'OK') {
                     const externalListings = googleRes.data.results
@@ -221,13 +229,26 @@ router.get('/', async (req, res) => {
                         );
                     }
 
+                    // Guest Filter for External Results
+                    if (guests) {
+                        newExternalListings = newExternalListings.filter(l =>
+                            l.details.guests >= Number(guests)
+                        );
+                    }
+
                     listings = [...listings, ...newExternalListings];
+                } else {
+                    console.log('Google API returned non-OK status:', googleRes.data);
                 }
             } catch (googleErr) {
                 console.error('Google API Error:', googleErr.message);
+                if (googleErr.response) {
+                    console.error('Google API Error Details:', googleErr.response.data);
+                }
             }
         }
 
+        console.log(`Returning ${listings.length} listings`);
         res.json(listings);
     } catch (error) {
         res.status(500).json({ message: error.message });

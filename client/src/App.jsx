@@ -1,12 +1,16 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 import HomePage from './pages/HomePage';
+import SearchResultsPage from './pages/SearchResultsPage';
 import ListingDetailsPage from './pages/ListingDetailsPage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 import TripsPage from './pages/TripsPage';
 import WishlistsPage from './pages/WishlistsPage';
 import AccountPage from './pages/AccountPage';
+import HelpCenterPage from './pages/HelpCenterPage';
 import ExperiencesPage from './pages/ExperiencesPage';
 import ExperienceDetailsPage from './pages/ExperienceDetailsPage';
 import TravelPackagesPage from './pages/TravelPackagesPage';
@@ -36,6 +40,9 @@ function App() {
           <Route path="trips" element={<TripsPage />} />
           <Route path="wishlists" element={<WishlistsPage />} />
           <Route path="account" element={<AccountPage />} />
+          <Route path="account" element={<AccountPage />} />
+          <Route path="help" element={<HelpCenterPage />} />
+          <Route path="search" element={<SearchResultsPage />} />
 
           {/* Places Section */}
           <Route path="places" element={<PlacesPage />}>
@@ -51,6 +58,8 @@ function App() {
         </Route>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
 
         {/* Admin Routes */}
         <Route path="/admin" element={<AdminLayout />}>

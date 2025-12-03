@@ -70,7 +70,7 @@ const TripsPage = () => {
     }
 
     return (
-        <div style={{ padding: '40px', maxWidth: '1280px', margin: '0 auto' }}>
+        <div className="container" style={{ maxWidth: '1280px', margin: '0 auto', paddingTop: '40px', paddingBottom: '40px' }}>
             <h1 style={{ fontSize: '32px', fontWeight: '700', marginBottom: '32px', color: 'var(--text-main)' }}>Trips</h1>
 
             {bookings.length === 0 ? (

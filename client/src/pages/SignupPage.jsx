@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { FaApple, FaFacebookF, FaPaperPlane } from 'react-icons/fa';
-import { FcGoogle } from 'react-icons/fc';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { authAPI } from '../services/api';
+import pngLogo from '../assets/pnglogo.png';
 
 const SignupPage = () => {
     const [name, setName] = useState('');
@@ -73,28 +72,30 @@ const SignupPage = () => {
                 {/* Logo */}
                 <Link to="/" style={{
                     display: 'flex',
+                    flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: '10px',
+                    gap: '12px',
                     marginBottom: '48px',
                     textDecoration: 'none'
                 }}>
                     <div style={{
-                        width: '48px',
-                        height: '48px',
-                        background: 'var(--primary-gradient)',
-                        borderRadius: '12px',
+                        padding: '0',
+                        borderRadius: '0',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        color: 'white',
-                        fontWeight: '800',
-                        fontSize: '24px',
-                        boxShadow: 'var(--shadow-md)'
                     }}>
-                        <FaPaperPlane size={20} style={{ transform: 'translate(-2px, 2px)' }} />
+                        <img src={pngLogo} alt="aanandham.go Logo" style={{ width: '130px', height: '70px', objectFit: 'contain' }} />
                     </div>
-                    <span style={{ fontSize: '28px', fontWeight: '700', color: 'var(--text-main)', letterSpacing: '-0.5px' }}>Roam</span>
+                    <span style={{
+                        color: '#1a1a1a',
+                        fontSize: '25px',
+                        fontWeight: '900',
+                        letterSpacing: '-0.5px'
+                    }}>
+                        aanandham.go
+                    </span>
                 </Link>
 
                 {/* Header */}
@@ -115,107 +116,6 @@ const SignupPage = () => {
                     }}>
                         Join millions of travelers worldwide
                     </p>
-                </div>
-
-                {/* Social Login - Circular Icons */}
-                <div style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    gap: '16px',
-                    marginBottom: '32px'
-                }}>
-                    <button style={{
-                        width: '56px',
-                        height: '56px',
-                        border: '2px solid var(--border)',
-                        borderRadius: '50%',
-                        backgroundColor: 'white',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        transition: 'all 0.2s ease',
-                        boxShadow: 'var(--shadow-sm)'
-                    }}
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.transform = 'translateY(-2px)';
-                            e.currentTarget.style.boxShadow = 'var(--shadow-md)';
-                            e.currentTarget.style.borderColor = '#DB4437';
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.transform = 'translateY(0)';
-                            e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
-                            e.currentTarget.style.borderColor = 'var(--border)';
-                        }}
-                    >
-                        <FcGoogle size={24} />
-                    </button>
-
-                    <button style={{
-                        width: '56px',
-                        height: '56px',
-                        border: '2px solid var(--border)',
-                        borderRadius: '50%',
-                        backgroundColor: 'white',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        transition: 'all 0.2s ease',
-                        boxShadow: 'var(--shadow-sm)'
-                    }}
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.transform = 'translateY(-2px)';
-                            e.currentTarget.style.boxShadow = 'var(--shadow-md)';
-                            e.currentTarget.style.borderColor = '#000000';
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.transform = 'translateY(0)';
-                            e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
-                            e.currentTarget.style.borderColor = 'var(--border)';
-                        }}
-                    >
-                        <FaApple size={26} color="#000000" />
-                    </button>
-
-                    <button style={{
-                        width: '56px',
-                        height: '56px',
-                        border: '2px solid var(--border)',
-                        borderRadius: '50%',
-                        backgroundColor: 'white',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        transition: 'all 0.2s ease',
-                        boxShadow: 'var(--shadow-sm)'
-                    }}
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.transform = 'translateY(-2px)';
-                            e.currentTarget.style.boxShadow = 'var(--shadow-md)';
-                            e.currentTarget.style.borderColor = '#1877F2';
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.transform = 'translateY(0)';
-                            e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
-                            e.currentTarget.style.borderColor = 'var(--border)';
-                        }}
-                    >
-                        <FaFacebookF size={22} color="#1877F2" />
-                    </button>
-                </div>
-
-                {/* Divider */}
-                <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '16px',
-                    marginBottom: '32px'
-                }}>
-                    <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--border)' }}></div>
-                    <span style={{ fontSize: '15px', color: 'var(--text-secondary)', fontWeight: '500' }}>OR</span>
-                    <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--border)' }}></div>
                 </div>
 
                 <form onSubmit={handleSignup}>
@@ -314,7 +214,7 @@ const SignupPage = () => {
                             }}
                             onFocus={(e) => {
                                 e.target.style.borderColor = 'var(--primary)';
-                                e.target.style.backgroundColor = 'white';
+                                e.target.style.backgroundColor = 'var(--bg-white)';
                             }}
                             onBlur={(e) => {
                                 e.target.style.borderColor = 'var(--border)';
@@ -354,7 +254,7 @@ const SignupPage = () => {
                             }}
                             onFocus={(e) => {
                                 e.target.style.borderColor = 'var(--primary)';
-                                e.target.style.backgroundColor = 'white';
+                                e.target.style.backgroundColor = 'var(--bg-white)';
                             }}
                             onBlur={(e) => {
                                 e.target.style.borderColor = 'var(--border)';
@@ -394,7 +294,7 @@ const SignupPage = () => {
                             }}
                             onFocus={(e) => {
                                 e.target.style.borderColor = 'var(--primary)';
-                                e.target.style.backgroundColor = 'white';
+                                e.target.style.backgroundColor = 'var(--bg-white)';
                             }}
                             onBlur={(e) => {
                                 e.target.style.borderColor = 'var(--border)';
@@ -464,7 +364,7 @@ const SignupPage = () => {
                     textAlign: 'center',
                     lineHeight: '1.6'
                 }}>
-                    By signing up, you agree to Roam's{' '}
+                    By signing up, you agree to aanandham.go's{' '}
                     <a href="#" style={{ color: 'var(--text-main)', textDecoration: 'underline' }}>Terms</a>
                     {' '}and{' '}
                     <a href="#" style={{ color: 'var(--text-main)', textDecoration: 'underline' }}>Privacy Policy</a>

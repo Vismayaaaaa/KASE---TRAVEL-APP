@@ -1,7 +1,23 @@
 import { FaSearch } from 'react-icons/fa';
 import { motion } from 'framer-motion';
+import { useSearchParams } from 'react-router-dom';
 
 const SearchCompact = ({ onClick }) => {
+    const [searchParams] = useSearchParams();
+    const location = searchParams.get('search');
+    const checkin = searchParams.get('checkin');
+    const checkout = searchParams.get('checkout');
+    const guests = searchParams.get('guests');
+
+    let dateText = 'Any week';
+    if (checkin && checkout) {
+        const start = new Date(checkin);
+        const end = new Date(checkout);
+        dateText = `${start.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} - ${end.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}`;
+    }
+
+    const guestText = guests ? `${guests} guest${guests > 1 ? 's' : ''}` : 'Add guests';
+
     return (
         <motion.div
             layoutId="search-bar"
@@ -19,7 +35,7 @@ const SearchCompact = ({ onClick }) => {
                 boxShadow: 'var(--shadow-sm)',
                 gap: '0',
                 cursor: 'pointer',
-                backgroundColor: 'white',
+                backgroundColor: 'var(--bg-white)',
                 height: '48px',
                 boxSizing: 'border-box'
             }}
@@ -28,11 +44,17 @@ const SearchCompact = ({ onClick }) => {
                 y: -1
             }}
         >
-            <span style={{ fontWeight: '600', fontSize: '14px', color: 'var(--text-main)', paddingRight: '16px' }}>Anywhere</span>
+            <span style={{ fontWeight: '600', fontSize: '14px', color: 'var(--text-main)', paddingRight: '16px', maxWidth: '120px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {location || 'Anywhere'}
+            </span>
             <span style={{ borderLeft: '1px solid var(--border)', height: '24px', display: 'block' }}></span>
-            <span style={{ fontWeight: '600', fontSize: '14px', color: 'var(--text-main)', padding: '0 16px' }}>Any week</span>
+            <span style={{ fontWeight: '600', fontSize: '14px', color: 'var(--text-main)', padding: '0 16px', whiteSpace: 'nowrap' }}>
+                {dateText}
+            </span>
             <span style={{ borderLeft: '1px solid var(--border)', height: '24px', display: 'block' }}></span>
-            <span style={{ color: 'var(--text-secondary)', fontSize: '14px', paddingLeft: '16px', paddingRight: '16px' }}>Add guests</span>
+            <span style={{ color: guests ? 'var(--text-main)' : 'var(--text-secondary)', fontSize: '14px', paddingLeft: '16px', paddingRight: '16px', whiteSpace: 'nowrap' }}>
+                {guestText}
+            </span>
             <div style={{
                 background: 'var(--primary-gradient)',
                 color: 'white',

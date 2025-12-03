@@ -86,17 +86,11 @@ router.post('/', async (req, res) => {
             return res.status(404).json({ message: 'Listing not found or could not be created' });
         }
 
-        // Handle guests structure
-        let guestData = guests;
-        if (typeof guests === 'number') {
-            guestData = { adults: guests, children: 0, infants: 0, pets: 0 };
-        }
-
         const bookingData = {
             listing: resolvedListingId,
             checkIn,
             checkOut,
-            numberOfGuests: guestData,
+            guests: typeof guests === 'number' ? guests : 1,
             totalPrice
         };
 

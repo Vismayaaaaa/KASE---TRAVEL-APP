@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { FaGlobe, FaFacebookF, FaTwitter, FaInstagram } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 import LanguageModal from './LanguageModal';
 import { usePreferences } from '../contexts/PreferencesContext';
 
@@ -9,15 +10,36 @@ const Footer = () => {
     const sections = [
         {
             title: t('support'),
-            links: [t('help'), 'AirCover', 'Anti-discrimination', 'Disability support', 'Cancellation options', 'Report neighborhood concern']
+            links: [
+                { label: t('help'), url: '/help' },
+                { label: 'AirCover', url: '#' },
+                { label: 'Anti-discrimination', url: '#' },
+                { label: 'Disability support', url: '#' },
+                { label: 'Cancellation options', url: '#' },
+                { label: 'Report neighborhood concern', url: '#' }
+            ]
         },
         {
             title: t('hosting'),
-            links: [t('airbnbYourHome'), 'AirCover for Hosts', 'Hosting resources', 'Community forum', 'Hosting responsibly', 'Airbnb-friendly apartments']
+            links: [
+                { label: t('airbnbYourHome'), url: '#' },
+                { label: 'AirCover for Hosts', url: '#' },
+                { label: 'Hosting resources', url: '#' },
+                { label: 'Community forum', url: '#' },
+                { label: 'Hosting responsibly', url: '#' },
+                { label: 'Airbnb-friendly apartments', url: '#' }
+            ]
         },
         {
             title: t('company'),
-            links: ['Newsroom', 'New features', 'Careers', 'Investors', 'Gift cards', 'Airbnb.org emergency stays']
+            links: [
+                { label: 'Newsroom', url: '#' },
+                { label: 'New features', url: '#' },
+                { label: 'Careers', url: '#' },
+                { label: 'Investors', url: '#' },
+                { label: 'Gift cards', url: '#' },
+                { label: 'Airbnb.org emergency stays', url: '#' }
+            ]
         }
     ];
 
@@ -44,16 +66,29 @@ const Footer = () => {
                             <ul style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: '12px' }}>
                                 {section.links.map((link, i) => (
                                     <li key={i}>
-                                        <a href="#" style={{
-                                            color: 'var(--text-light)',
-                                            textDecoration: 'none',
-                                            transition: 'color 0.2s ease'
-                                        }}
-                                            onMouseEnter={(e) => e.target.style.color = 'white'}
-                                            onMouseLeave={(e) => e.target.style.color = 'var(--text-light)'}
-                                        >
-                                            {link}
-                                        </a>
+                                        {link.url.startsWith('/') ? (
+                                            <Link to={link.url} style={{
+                                                color: 'var(--text-light)',
+                                                textDecoration: 'none',
+                                                transition: 'color 0.2s ease'
+                                            }}
+                                                onMouseEnter={(e) => e.target.style.color = 'white'}
+                                                onMouseLeave={(e) => e.target.style.color = 'var(--text-light)'}
+                                            >
+                                                {link.label}
+                                            </Link>
+                                        ) : (
+                                            <a href={link.url} style={{
+                                                color: 'var(--text-light)',
+                                                textDecoration: 'none',
+                                                transition: 'color 0.2s ease'
+                                            }}
+                                                onMouseEnter={(e) => e.target.style.color = 'white'}
+                                                onMouseLeave={(e) => e.target.style.color = 'var(--text-light)'}
+                                            >
+                                                {link.label}
+                                            </a>
+                                        )}
                                     </li>
                                 ))}
                             </ul>
@@ -70,7 +105,7 @@ const Footer = () => {
                     gap: '16px'
                 }}>
                     <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                        <span>© 2025 Roam, Inc.</span>
+                        <span>© 2025 aanandham.go, Inc.</span>
                         <span>·</span>
                         <a href="#" style={{ color: 'inherit' }} onMouseEnter={(e) => e.target.style.textDecoration = 'underline'} onMouseLeave={(e) => e.target.style.textDecoration = 'none'}>{t('privacy')}</a>
                         <span>·</span>
@@ -86,7 +121,7 @@ const Footer = () => {
                             onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'}
                             onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
                         >
-                            <FaGlobe size={16} />
+
                             <span>{language.name} ({language.region})</span>
                         </div>
                         <div

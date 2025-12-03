@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { FaSearch, FaMapMarkerAlt, FaMinus, FaPlus } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import usePlacesAutocomplete, {
@@ -19,13 +19,21 @@ const SearchExpanded = () => {
         libraries: ['places']
     });
 
-    const [dateRange, setDateRange] = useState([null, null]);
+    const [searchParams] = useSearchParams();
+
+    // Initialize state from URL params
+    const initialSearch = searchParams.get('search') || '';
+    const initialCheckin = searchParams.get('checkin') ? new Date(searchParams.get('checkin')) : null;
+    const initialCheckout = searchParams.get('checkout') ? new Date(searchParams.get('checkout')) : null;
+    const initialGuests = parseInt(searchParams.get('guests') || '1', 10);
+
+    const [dateRange, setDateRange] = useState([initialCheckin, initialCheckout]);
     const [startDate, endDate] = dateRange;
     const [activeField, setActiveField] = useState(null); // 'location', 'dates', 'guests'
 
     // Guest State
     const [guests, setGuests] = useState({
-        adults: 1,
+        adults: initialGuests,
         children: 0,
         infants: 0,
         pets: 0
@@ -45,6 +53,7 @@ const SearchExpanded = () => {
         setValue,
         clearSuggestions,
     } = usePlacesAutocomplete({
+        defaultValue: initialSearch,
         requestOptions: {
             /* Define search scope here */
         },
@@ -72,7 +81,8 @@ const SearchExpanded = () => {
         if (endDate) queryParams.append('checkout', endDate.toISOString());
         if (totalGuests > 1) queryParams.append('guests', totalGuests);
 
-        navigate(`/?${queryParams.toString()}`);
+        // Navigate to search results page
+        navigate(`/search?${queryParams.toString()}`);
     };
 
     const handleKeyDown = (e) => {
@@ -125,7 +135,10 @@ const SearchExpanded = () => {
             {/* Tabs */}
             <div style={{ display: 'flex', gap: '32px', marginBottom: '24px', color: 'var(--text-main)' }}>
                 <span
-                    onClick={() => navigate('/')}
+                    onClick={() => {
+                        setValue(''); // Clear search input
+                        navigate('/');
+                    }}
                     style={{
                         fontWeight: pathname === '/' ? '600' : '500',
                         borderBottom: pathname === '/' ? '2px solid var(--text-main)' : '2px solid transparent',
@@ -169,17 +182,23 @@ const SearchExpanded = () => {
             </div>
 
             {/* Search Bar Container */}
-            <div style={{
-                display: 'flex',
-                backgroundColor: 'var(--bg-off-white)',
-                borderRadius: 'var(--radius-full)',
-                position: 'relative',
-                width: '100%',
-                border: '1px solid var(--border)',
-                boxShadow: activeField ? 'var(--shadow-xl)' : 'var(--shadow-sm)',
-                height: '66px',
-                transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
-            }}>
+            <form
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    handleSearch();
+                }}
+                style={{
+                    display: 'flex',
+                    backgroundColor: 'var(--bg-off-white)',
+                    borderRadius: 'var(--radius-full)',
+                    position: 'relative',
+                    width: '100%',
+                    border: '1px solid var(--border)',
+                    boxShadow: activeField ? 'var(--shadow-xl)' : 'var(--shadow-sm)',
+                    height: '66px',
+                    transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
+                }}
+            >
                 {/* Where Input */}
                 <div
                     style={{
@@ -191,7 +210,7 @@ const SearchExpanded = () => {
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'center',
-                        backgroundColor: activeField === 'location' ? 'white' : 'transparent',
+                        backgroundColor: activeField === 'location' ? 'var(--bg-white)' : 'transparent',
                         boxShadow: activeField === 'location' ? 'var(--shadow-md)' : 'none',
                         zIndex: activeField === 'location' ? 10 : 1,
                         transition: 'all 0.2s ease'
@@ -238,7 +257,7 @@ const SearchExpanded = () => {
                                     top: '80px',
                                     left: 0,
                                     width: '400px',
-                                    backgroundColor: 'white',
+                                    backgroundColor: 'var(--bg-white)',
                                     borderRadius: 'var(--radius-xl)',
                                     padding: '24px 0',
                                     boxShadow: 'var(--shadow-xl)',
@@ -264,7 +283,7 @@ const SearchExpanded = () => {
                                             transition: 'background-color 0.2s'
                                         }}
                                         onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--bg-off-white)'}
-                                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
+                                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'var(--bg-white)'}
                                     >
                                         <div style={{
                                             backgroundColor: 'var(--bg-off-white)',
@@ -299,7 +318,7 @@ const SearchExpanded = () => {
                         flex: 2,
                         display: 'flex',
                         position: 'relative',
-                        backgroundColor: activeField === 'dates' ? 'white' : 'transparent',
+                        backgroundColor: activeField === 'dates' ? 'var(--bg-white)' : 'transparent',
                         borderRadius: 'var(--radius-full)',
                         boxShadow: activeField === 'dates' ? 'var(--shadow-md)' : 'none',
                         zIndex: activeField === 'dates' ? 10 : 1,
@@ -339,7 +358,7 @@ const SearchExpanded = () => {
                                     position: 'absolute',
                                     top: '80px',
                                     left: '-50px', // Center it roughly
-                                    backgroundColor: 'white',
+                                    backgroundColor: 'var(--bg-white)',
                                     borderRadius: 'var(--radius-xl)',
                                     padding: '24px',
                                     boxShadow: 'var(--shadow-xl)',
@@ -377,7 +396,7 @@ const SearchExpanded = () => {
                         justifyContent: 'space-between',
                         cursor: 'pointer',
                         borderRadius: 'var(--radius-full)',
-                        backgroundColor: activeField === 'guests' ? 'white' : 'transparent',
+                        backgroundColor: activeField === 'guests' ? 'var(--bg-white)' : 'transparent',
                         boxShadow: activeField === 'guests' ? 'var(--shadow-md)' : 'none',
                         zIndex: activeField === 'guests' ? 10 : 1,
                         position: 'relative',
@@ -393,9 +412,11 @@ const SearchExpanded = () => {
                             {getTotalGuests()}
                         </div>
                     </div>
-                    <div
+                    <button
+                        type="submit"
                         onClick={(e) => {
                             e.stopPropagation();
+                            e.preventDefault(); // Prevent form submit to avoid double-fire, we handle it here
                             handleSearch();
                         }}
                         style={{
@@ -408,7 +429,10 @@ const SearchExpanded = () => {
                             alignItems: 'center',
                             justifyContent: 'center',
                             boxShadow: '0 4px 12px rgba(79, 70, 229, 0.4)',
-                            transition: 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+                            transition: 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                            border: 'none',
+                            cursor: 'pointer',
+                            zIndex: 20
                         }}
                         onMouseEnter={(e) => {
                             e.currentTarget.style.transform = 'scale(1.1)';
@@ -420,7 +444,7 @@ const SearchExpanded = () => {
                         }}
                     >
                         <FaSearch size={18} />
-                    </div>
+                    </button>
 
                     {/* Guest Dropdown */}
                     <AnimatePresence>
@@ -435,7 +459,7 @@ const SearchExpanded = () => {
                                     top: '80px',
                                     right: 0,
                                     width: '400px',
-                                    backgroundColor: 'white',
+                                    backgroundColor: 'var(--bg-white)',
                                     borderRadius: 'var(--radius-xl)',
                                     padding: '24px',
                                     boxShadow: 'var(--shadow-xl)',
@@ -498,7 +522,7 @@ const SearchExpanded = () => {
                         )}
                     </AnimatePresence>
                 </div>
-            </div>
+            </form>
         </motion.div>
     );
 };

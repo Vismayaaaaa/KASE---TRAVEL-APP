@@ -13,6 +13,14 @@ const path = require('path');
 const axios = require('axios');
 require('dotenv').config();
 
+// Force development mode if not specified
+if (!process.env.NODE_ENV) {
+    process.env.NODE_ENV = 'development';
+}
+
+console.log(`🚀 Environment: ${process.env.NODE_ENV}`);
+console.log(`🔑 Google API Key: ${process.env.GOOGLE_MAPS_API_KEY ? 'Loaded' : 'Missing'}`);
+
 const { User, Listing, Booking, Experience, Review, Wishlist } = require('./models');
 const bookingRoutes = require('./routes/bookings');
 const listingRoutes = require('./routes/listings');
@@ -35,7 +43,10 @@ app.use(express.json({ limit: '10kb' }));
 app.use(cors({
     origin: [
         process.env.CLIENT_URL || 'http://localhost:5173',
-        'https://booking-site-react.vercel.app' // Add your Vercel URL explicitly
+        'http://localhost:5174',
+        'http://localhost:5175',
+        'http://localhost:5176',
+        'https://booking-site-react.vercel.app'
     ],
     credentials: true
 }));
@@ -120,6 +131,27 @@ app.post('/api/auth/login', loginLimiter, async (req, res) => {
 
         const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
         res.json({ token, user: { id: user._id, name: user.name, email, role: user.role, avatar: user.avatar } });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+app.put('/api/auth/profile', auth, async (req, res) => {
+    try {
+        const { name, email, phone, address } = req.body;
+        const updates = {};
+        if (name) updates.name = name;
+        if (email) updates.email = email;
+        if (phone) updates.phone = phone;
+        if (address) updates.address = address;
+
+        const user = await User.findByIdAndUpdate(
+            req.user._id,
+            { $set: updates },
+            { new: true }
+        ).select('-password');
+
+        res.json(user);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

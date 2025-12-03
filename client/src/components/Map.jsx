@@ -27,9 +27,9 @@ const Map = ({ listings }) => {
                 url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
             />
             {listings.map((listing) => {
-                // Mock coordinates logic
-                const lat = 48.8566 + (Math.random() - 0.5) * 0.1;
-                const lng = 2.3522 + (Math.random() - 0.5) * 0.1;
+                // Use actual coordinates or fallback to Paris
+                const lat = listing.latitude || (48.8566 + (Math.random() - 0.5) * 0.1);
+                const lng = listing.longitude || (2.3522 + (Math.random() - 0.5) * 0.1);
 
                 return (
                     <Marker

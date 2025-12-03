@@ -21,7 +21,7 @@ const PlacesPage = () => {
             {/* Sub Navigation for Places */}
             <div style={{
                 borderBottom: '1px solid var(--border-light)',
-                backgroundColor: 'white',
+                backgroundColor: 'var(--bg-white)',
                 paddingTop: '10px',
                 paddingBottom: '0'
             }}>

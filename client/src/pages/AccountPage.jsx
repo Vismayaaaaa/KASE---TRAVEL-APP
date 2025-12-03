@@ -1,13 +1,69 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { authAPI } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 
 const AccountPage = () => {
-    const user = authAPI.getCurrentUser();
+    const [user, setUser] = useState(authAPI.getCurrentUser());
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('personal');
+
+    // Edit States
+    const [editingField, setEditingField] = useState(null);
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        phone: '',
+        address: ''
+    });
+    const [loading, setLoading] = useState(false);
+
+    // Bank Modal
     const [isBankModalOpen, setIsBankModalOpen] = useState(false);
     const [bankData, setBankData] = useState({ holderName: '', bankName: '', accountNumber: '' });
+
+    useEffect(() => {
+        if (!user) {
+            navigate('/login');
+        } else {
+            setFormData({
+                name: user.name || '',
+                email: user.email || '',
+                phone: user.phone || '',
+                address: user.address || ''
+            });
+        }
+    }, [user, navigate]);
+
+    const handleEdit = (field) => {
+        setEditingField(field);
+    };
+
+    const handleCancel = () => {
+        setEditingField(null);
+        // Reset form data to current user data
+        setFormData({
+            name: user.name || '',
+            email: user.email || '',
+            phone: user.phone || '',
+            address: user.address || ''
+        });
+    };
+
+    const handleSave = async () => {
+        setLoading(true);
+        try {
+            const updatedUser = await authAPI.updateProfile(formData);
+            setUser(updatedUser);
+            setEditingField(null);
+            // Dispatch storage event to update other components if needed
+            window.dispatchEvent(new Event('storage'));
+        } catch (error) {
+            console.error('Failed to update profile:', error);
+            alert('Failed to update profile. Please try again.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleAddBank = (e) => {
         e.preventDefault();
@@ -17,13 +73,97 @@ const AccountPage = () => {
         setBankData({ holderName: '', bankName: '', accountNumber: '' });
     };
 
-    if (!user) {
-        navigate('/login');
-        return null;
-    }
+    if (!user) return null;
+
+    const renderEditableField = (label, fieldKey, value, placeholder = 'Not provided') => {
+        const isEditing = editingField === fieldKey;
+
+        return (
+            <div style={{ marginBottom: '32px', padding: '24px', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', backgroundColor: 'var(--bg-white)', boxShadow: 'var(--shadow-sm)' }}>
+                <div className="account-field-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                    <div className="account-field-label" style={{ flex: 1, marginRight: '24px' }}>
+                        <div style={{ fontWeight: '600', marginBottom: '8px', color: 'var(--text-main)' }}>{label}</div>
+                        {isEditing ? (
+                            <input
+                                type={fieldKey === 'email' ? 'email' : 'text'}
+                                value={formData[fieldKey]}
+                                onChange={(e) => setFormData({ ...formData, [fieldKey]: e.target.value })}
+                                style={{
+                                    width: '100%',
+                                    padding: '12px',
+                                    borderRadius: '8px',
+                                    border: '1px solid var(--primary)',
+                                    fontSize: '16px',
+                                    outline: 'none'
+                                }}
+                                autoFocus
+                            />
+                        ) : (
+                            <div style={{ color: value ? 'var(--text-secondary)' : '#999' }}>{value || placeholder}</div>
+                        )}
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                        {isEditing ? (
+                            <>
+                                <button
+                                    onClick={handleCancel}
+                                    disabled={loading}
+                                    style={{
+                                        padding: '8px 16px',
+                                        border: '1px solid var(--text-secondary)',
+                                        borderRadius: 'var(--radius-md)',
+                                        background: 'none',
+                                        cursor: 'pointer',
+                                        fontWeight: '600',
+                                        color: 'var(--text-main)'
+                                    }}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    onClick={handleSave}
+                                    disabled={loading}
+                                    style={{
+                                        padding: '8px 16px',
+                                        border: 'none',
+                                        borderRadius: 'var(--radius-md)',
+                                        background: 'var(--primary)',
+                                        cursor: 'pointer',
+                                        fontWeight: '600',
+                                        color: 'white'
+                                    }}
+                                >
+                                    {loading ? 'Saving...' : 'Save'}
+                                </button>
+                            </>
+                        ) : (
+                            <button
+                                onClick={() => handleEdit(fieldKey)}
+                                style={{
+                                    padding: '8px 16px',
+                                    border: '1px solid var(--text-main)',
+                                    borderRadius: 'var(--radius-md)',
+                                    background: 'none',
+                                    cursor: 'pointer',
+                                    fontWeight: '600',
+                                    color: 'var(--text-main)',
+                                    transition: 'all 0.2s ease'
+                                }}
+                                onMouseEnter={(e) => e.target.style.backgroundColor = 'var(--bg-light)'}
+                                onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+                            >
+                                {value ? 'Edit' : 'Add'}
+                            </button>
+                        )}
+                    </div>
+                </div>
+            </div>
+        );
+    };
 
     return (
-        <div style={{ maxWidth: '1120px', margin: '0 auto', padding: '40px' }}>
+        <div className="container" style={{ maxWidth: '1120px', margin: '0 auto', paddingTop: '40px', paddingBottom: '40px' }}>
             <h1 style={{ fontSize: '32px', fontWeight: '700', marginBottom: '8px', color: 'var(--text-main)' }}>Account</h1>
             <p style={{ color: 'var(--text-secondary)', marginBottom: '32px' }}>
                 {user.name}, {user.email}
@@ -31,148 +171,39 @@ const AccountPage = () => {
 
             {/* Tabs */}
             <div style={{ borderBottom: '1px solid var(--border)', marginBottom: '32px' }}>
-                <div style={{ display: 'flex', gap: '32px' }}>
-                    <button
-                        onClick={() => setActiveTab('personal')}
-                        style={{
-                            background: 'none',
-                            border: 'none',
-                            padding: '16px 0',
-                            fontSize: '16px',
-                            fontWeight: '600',
-                            cursor: 'pointer',
-                            borderBottom: activeTab === 'personal' ? '2px solid var(--primary)' : '2px solid transparent',
-                            color: activeTab === 'personal' ? 'var(--primary)' : 'var(--text-secondary)',
-                            transition: 'all 0.2s ease'
-                        }}
-                    >
-                        Personal info
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('security')}
-                        style={{
-                            background: 'none',
-                            border: 'none',
-                            padding: '16px 0',
-                            fontSize: '16px',
-                            fontWeight: '600',
-                            cursor: 'pointer',
-                            borderBottom: activeTab === 'security' ? '2px solid var(--primary)' : '2px solid transparent',
-                            color: activeTab === 'security' ? 'var(--primary)' : 'var(--text-secondary)',
-                            transition: 'all 0.2s ease'
-                        }}
-                    >
-                        Login & security
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('preferences')}
-                        style={{
-                            background: 'none',
-                            border: 'none',
-                            padding: '16px 0',
-                            fontSize: '16px',
-                            fontWeight: '600',
-                            cursor: 'pointer',
-                            borderBottom: activeTab === 'preferences' ? '2px solid var(--primary)' : '2px solid transparent',
-                            color: activeTab === 'preferences' ? 'var(--primary)' : 'var(--text-secondary)',
-                            transition: 'all 0.2s ease'
-                        }}
-                    >
-                        Preferences
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('payments')}
-                        style={{
-                            background: 'none',
-                            border: 'none',
-                            padding: '16px 0',
-                            fontSize: '16px',
-                            fontWeight: '600',
-                            cursor: 'pointer',
-                            borderBottom: activeTab === 'payments' ? '2px solid var(--primary)' : '2px solid transparent',
-                            color: activeTab === 'payments' ? 'var(--primary)' : 'var(--text-secondary)',
-                            transition: 'all 0.2s ease'
-                        }}
-                    >
-                        Payments & Payouts
-                    </button>
+                <div style={{ display: 'flex', gap: '32px', overflowX: 'auto' }}>
+                    {['personal', 'security', 'preferences', 'payments'].map(tab => (
+                        <button
+                            key={tab}
+                            onClick={() => setActiveTab(tab)}
+                            style={{
+                                background: 'none',
+                                border: 'none',
+                                padding: '16px 0',
+                                fontSize: '16px',
+                                fontWeight: '600',
+                                cursor: 'pointer',
+                                borderBottom: activeTab === tab ? '2px solid var(--primary)' : '2px solid transparent',
+                                color: activeTab === tab ? 'var(--primary)' : 'var(--text-secondary)',
+                                transition: 'all 0.2s ease',
+                                textTransform: 'capitalize'
+                            }}
+                        >
+                            {tab === 'personal' ? 'Personal info' :
+                                tab === 'payments' ? 'Payments & Payouts' :
+                                    tab === 'security' ? 'Login & security' : tab}
+                        </button>
+                    ))}
                 </div>
             </div>
 
             {/* Content */}
             {activeTab === 'personal' && (
                 <div>
-                    <div style={{ marginBottom: '32px', padding: '24px', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', backgroundColor: 'var(--bg-white)', boxShadow: 'var(--shadow-sm)' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                            <div>
-                                <div style={{ fontWeight: '600', marginBottom: '4px', color: 'var(--text-main)' }}>Legal name</div>
-                                <div style={{ color: 'var(--text-secondary)' }}>{user.name}</div>
-                            </div>
-                            <button style={{
-                                padding: '8px 16px',
-                                border: '1px solid var(--text-main)',
-                                borderRadius: 'var(--radius-md)',
-                                background: 'none',
-                                cursor: 'pointer',
-                                fontWeight: '600',
-                                color: 'var(--text-main)',
-                                transition: 'all 0.2s ease'
-                            }}
-                                onMouseEnter={(e) => e.target.style.backgroundColor = 'var(--bg-light)'}
-                                onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-                            >
-                                Edit
-                            </button>
-                        </div>
-                    </div>
-
-                    <div style={{ marginBottom: '32px', padding: '24px', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', backgroundColor: 'var(--bg-white)', boxShadow: 'var(--shadow-sm)' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                            <div>
-                                <div style={{ fontWeight: '600', marginBottom: '4px', color: 'var(--text-main)' }}>Email address</div>
-                                <div style={{ color: 'var(--text-secondary)' }}>{user.email}</div>
-                            </div>
-                            <button style={{
-                                padding: '8px 16px',
-                                border: '1px solid var(--text-main)',
-                                borderRadius: 'var(--radius-md)',
-                                background: 'none',
-                                cursor: 'pointer',
-                                fontWeight: '600',
-                                color: 'var(--text-main)',
-                                transition: 'all 0.2s ease'
-                            }}
-                                onMouseEnter={(e) => e.target.style.backgroundColor = 'var(--bg-light)'}
-                                onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-                            >
-                                Edit
-                            </button>
-                        </div>
-                    </div>
-
-                    <div style={{ padding: '24px', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', backgroundColor: 'var(--bg-white)', boxShadow: 'var(--shadow-sm)' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <div>
-                                <div style={{ fontWeight: '600', marginBottom: '4px', color: 'var(--text-main)' }}>Phone number</div>
-                                <div style={{ color: 'var(--text-secondary)' }}>Not provided</div>
-                            </div>
-                            <button style={{
-                                padding: '8px 16px',
-                                border: '1px solid var(--text-main)',
-                                borderRadius: 'var(--radius-md)',
-                                background: 'none',
-                                cursor: 'pointer',
-                                fontWeight: '600',
-                                color: 'var(--text-main)',
-                                transition: 'all 0.2s ease'
-                            }}
-                                onMouseEnter={(e) => e.target.style.backgroundColor = 'var(--bg-light)'}
-                                onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
-                            >
-                                Add
-                            </button>
-                        </div>
-                    </div>
+                    {renderEditableField('Legal name', 'name', user.name)}
+                    {renderEditableField('Email address', 'email', user.email)}
+                    {renderEditableField('Phone number', 'phone', user.phone)}
+                    {renderEditableField('Address', 'address', user.address)}
                 </div>
             )}
 
@@ -182,18 +213,20 @@ const AccountPage = () => {
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <div>
                                 <div style={{ fontWeight: '600', marginBottom: '4px', color: 'var(--text-main)' }}>Password</div>
-                                <div style={{ color: 'var(--text-secondary)' }}>Last updated 30 days ago</div>
+                                <div style={{ color: 'var(--text-secondary)' }}>Last updated recently</div>
                             </div>
-                            <button style={{
-                                padding: '8px 16px',
-                                border: '1px solid var(--text-main)',
-                                borderRadius: 'var(--radius-md)',
-                                background: 'none',
-                                cursor: 'pointer',
-                                fontWeight: '600',
-                                color: 'var(--text-main)',
-                                transition: 'all 0.2s ease'
-                            }}
+                            <button
+                                onClick={() => navigate('/forgot-password')}
+                                style={{
+                                    padding: '8px 16px',
+                                    border: '1px solid var(--text-main)',
+                                    borderRadius: 'var(--radius-md)',
+                                    background: 'none',
+                                    cursor: 'pointer',
+                                    fontWeight: '600',
+                                    color: 'var(--text-main)',
+                                    transition: 'all 0.2s ease'
+                                }}
                                 onMouseEnter={(e) => e.target.style.backgroundColor = 'var(--bg-light)'}
                                 onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
                             >
@@ -332,7 +365,7 @@ const AccountPage = () => {
                     zIndex: 1000
                 }}>
                     <div style={{
-                        backgroundColor: 'white',
+                        backgroundColor: 'var(--bg-white)',
                         padding: '32px',
                         borderRadius: '16px',
                         width: '100%',

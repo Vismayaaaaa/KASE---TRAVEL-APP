@@ -6,8 +6,8 @@ const packages = [
     {
         title: 'Bali Bliss',
         image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4',
-        price: 899,
-        duration: '7 Days',
+        price: 45,
+        duration: '12 Days',
         description: 'Experience the tropical paradise of Bali with this all-inclusive package. From pristine beaches to lush rice terraces, discover the magic of the Island of the Gods.',
         location: 'Bali, Indonesia',
         inclusions: ['Airport transfers', '6 nights accommodation', 'Daily breakfast', 'Guided tours', 'Spa treatment'],
@@ -25,8 +25,8 @@ const packages = [
     {
         title: 'Parisian Escape',
         image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34',
-        price: 1299,
-        duration: '5 Days',
+        price: 48,
+        duration: '4 Days',
         description: 'Romance and culture await in the heart of France. Explore iconic landmarks, world-class museums, and charming cafes.',
         location: 'Paris, France',
         inclusions: ['Airport transfers', '4 nights accommodation', 'Seine River Cruise', 'Louvre Museum entry'],
@@ -42,7 +42,7 @@ const packages = [
     {
         title: 'Tokyo Explorer',
         image: 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26',
-        price: 1599,
+        price: 42,
         duration: '9 Days',
         description: 'Dive into the vibrant culture and technology of Tokyo. A perfect blend of modern neon lights and traditional temples.',
         location: 'Tokyo, Japan',

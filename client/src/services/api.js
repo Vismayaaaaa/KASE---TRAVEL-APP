@@ -35,6 +35,19 @@ export const authAPI = {
     getCurrentUser: () => {
         const user = localStorage.getItem('roam_user');
         return user ? JSON.parse(user) : null;
+    },
+
+    updateProfile: async (userData) => {
+        const response = await axios.put(`${API_URL}/auth/profile`, userData, {
+            headers: getAuthHeader()
+        });
+        if (response.data) {
+            // Update local storage with new user data
+            const currentUser = JSON.parse(localStorage.getItem('roam_user') || '{}');
+            const updatedUser = { ...currentUser, ...response.data };
+            localStorage.setItem('roam_user', JSON.stringify(updatedUser));
+        }
+        return response.data;
     }
 };
 
@@ -56,6 +69,11 @@ export const listingsAPI = {
             }
             if (filters.amenities && filters.amenities.length > 0) {
                 params.append('amenities', filters.amenities.join(','));
+            }
+
+            // Add guests filter
+            if (filters.guests) {
+                params.append('guests', filters.guests);
             }
 
             if (params.toString()) {

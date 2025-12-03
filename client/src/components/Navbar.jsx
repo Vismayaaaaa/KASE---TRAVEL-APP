@@ -62,7 +62,7 @@ const Navbar = () => {
         <div className="container">
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: isScrolled ? 0 : '16px' }}>
             {/* Logo - New Brand */}
-            <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1, textDecoration: 'none' }}>
+            <Link to={user?.role === 'admin' ? '/admin' : '/'} style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1, textDecoration: 'none' }}>
               <div style={{
                 padding: '0',
                 borderRadius: '0',
@@ -70,9 +70,9 @@ const Navbar = () => {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-                <img src={pngLogo} alt="Aanandham.go Logo" style={{ width: '130px', height: '70px', objectFit: 'contain' }} />
+                <img src={pngLogo} alt="aanandham.go Logo" style={{ width: '130px', height: '70px', objectFit: 'contain' }} />
               </div>
-              <span style={{
+              <span className="navbar-brand-text" style={{
                 color: '#1a1a1a',
                 fontSize: '25px',
                 fontWeight: '900',
@@ -91,21 +91,14 @@ const Navbar = () => {
                 {isScrolled ? (
                   <SearchCompact key="compact" onClick={() => setIsScrolled(false)} />
                 ) : (
-                  <div style={{ width: '300px', height: '48px' }}></div>
+                  <div className="navbar-search-placeholder" style={{ width: '300px', height: '48px' }}></div>
                 )}
               </AnimatePresence>
             </div>
 
             {/* Right Section: User Menu */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <a href="https://github.com/AmanTShekar" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', color: 'inherit', textDecoration: 'none' }}>
-                <div style={{ padding: '10px', borderRadius: '50%', cursor: 'pointer', transition: 'background 0.2s' }}
-                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--bg-off-white)'}
-                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-                >
-                  <FaGlobe size={16} color="#1a1a1a" />
-                </div>
-              </a>
+
 
               <div style={{ position: 'relative' }}>
                 <div style={{
@@ -117,7 +110,7 @@ const Navbar = () => {
                   padding: '6px 6px 6px 14px',
                   cursor: 'pointer',
                   transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-                  backgroundColor: 'white',
+                  backgroundColor: 'var(--bg-white)',
                   boxShadow: 'var(--shadow-sm)'
                 }}
                   onMouseEnter={(e) => {
@@ -150,7 +143,7 @@ const Navbar = () => {
                         position: 'absolute',
                         top: 'calc(100% + 8px)',
                         right: 0,
-                        backgroundColor: 'white',
+                        backgroundColor: 'var(--bg-white)',
                         borderRadius: 'var(--radius-md)',
                         boxShadow: 'var(--shadow-xl)',
                         width: '260px',
@@ -166,6 +159,9 @@ const Navbar = () => {
                             <div style={{ fontWeight: '700', fontSize: '15px', marginBottom: '4px', color: 'var(--text-main)' }}>{user.name}</div>
                             <div style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>{user.email}</div>
                           </div>
+                          {user.role === 'admin' && (
+                            <MenuItem onClick={() => { navigate('/admin'); setIsMenuOpen(false); }}>Admin Dashboard</MenuItem>
+                          )}
                           <MenuItem onClick={() => { navigate('/trips'); setIsMenuOpen(false); }}>Trips</MenuItem>
                           <MenuItem onClick={() => { navigate('/wishlists'); setIsMenuOpen(false); }}>Wishlists</MenuItem>
                           <div style={{ height: '1px', backgroundColor: 'var(--border-light)', margin: '8px 0' }}></div>
@@ -178,8 +174,7 @@ const Navbar = () => {
                           <MenuItem onClick={() => { navigate('/signup'); setIsMenuOpen(false); }} bold>{t('signup')}</MenuItem>
                           <MenuItem onClick={() => { navigate('/login'); setIsMenuOpen(false); }}>{t('login')}</MenuItem>
                           <div style={{ height: '1px', backgroundColor: 'var(--border-light)', margin: '8px 0' }}></div>
-                          <MenuItem onClick={() => window.open('https://github.com/AmanTShekar', '_blank')}>GitHub</MenuItem>
-                          <MenuItem>Help Center</MenuItem>
+                          <MenuItem onClick={() => { navigate('/help'); setIsMenuOpen(false); }}>Help Center</MenuItem>
                         </>
                       )}
                     </motion.div>

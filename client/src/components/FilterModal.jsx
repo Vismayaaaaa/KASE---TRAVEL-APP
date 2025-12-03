@@ -42,7 +42,7 @@ const FilterModal = ({ isOpen, onClose, onApply, initialFilters = {} }) => {
                     exit={{ opacity: 0, y: 50 }}
                     onClick={e => e.stopPropagation()}
                     style={{
-                        backgroundColor: 'white',
+                        backgroundColor: 'var(--bg-white)',
                         borderRadius: '12px',
                         width: '100%',
                         maxWidth: '600px',

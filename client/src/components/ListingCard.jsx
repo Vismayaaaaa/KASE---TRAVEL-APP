@@ -117,6 +117,10 @@ const ListingCard = memo(({ listing }) => {
                     src={listing.image}
                     alt={listing.title || listing.location}
                     loading="lazy"
+                    onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+                    }}
                     style={{
                         width: '100%',
                         height: '100%',

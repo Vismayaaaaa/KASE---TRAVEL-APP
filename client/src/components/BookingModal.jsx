@@ -122,12 +122,13 @@ const BookingModal = ({ isOpen, onClose, listing, isExperience = false, isPackag
                     style={{
                         backgroundColor: 'var(--bg-white)',
                         borderRadius: 'var(--radius-lg)',
-                        padding: '32px',
+                        padding: '24px',
                         maxWidth: step === 'receipt' ? '600px' : '500px',
                         width: '100%',
                         boxShadow: 'var(--shadow-xl)',
                         maxHeight: '90vh',
-                        overflowY: 'auto'
+                        overflowY: 'auto',
+                        margin: '16px'
                     }}
                 >
                     {step === 'receipt' ? (
@@ -176,7 +177,7 @@ const BookingModal = ({ isOpen, onClose, listing, isExperience = false, isPackag
                                     style={{
                                         flex: 1,
                                         padding: '12px',
-                                        backgroundColor: 'white',
+                                        backgroundColor: 'var(--bg-white)',
                                         border: '1px solid var(--border)',
                                         borderRadius: '8px',
                                         fontWeight: '600',

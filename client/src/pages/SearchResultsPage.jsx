@@ -1,95 +1,93 @@
 import { useState, useEffect } from 'react';
-
+import { useSearchParams } from 'react-router-dom';
 import ListingCard from '../components/ListingCard';
 import SkeletonListingCard from '../components/SkeletonListingCard';
 import GoogleMapComponent from '../components/GoogleMap';
-import CategoryBar from '../components/CategoryBar';
 import FilterModal from '../components/FilterModal';
 import { listingsAPI } from '../services/api';
-import { stayCategories } from '../data/categories';
 import { FaMap, FaList } from 'react-icons/fa';
 
 const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
-const HomePage = () => {
+const SearchResultsPage = () => {
     const [loading, setLoading] = useState(true);
     const [listings, setListings] = useState([]);
     const [filteredListings, setFilteredListings] = useState([]);
     const [error, setError] = useState(null);
     const [showMap, setShowMap] = useState(false);
-    const [selectedCategory, setSelectedCategory] = useState('Beach');
     const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
     const [filters, setFilters] = useState({});
+    const [searchParams] = useSearchParams();
 
+    const searchQuery = searchParams.get('search');
+    const guestsParam = searchParams.get('guests');
+    const checkin = searchParams.get('checkin');
+    const checkout = searchParams.get('checkout');
 
     useEffect(() => {
         const fetchListings = async () => {
             try {
                 setLoading(true);
-                // Only fetch by category for home page
-                const data = await listingsAPI.getAllListings('', selectedCategory, filters);
+                const guests = guestsParam;
+                const queryFilters = { ...filters, guests };
+
+                // Fetch listings based on search query
+                // We pass empty category because we are searching globally
+                const data = await listingsAPI.getAllListings(searchQuery, '', queryFilters);
                 setListings(data);
                 setFilteredListings(data);
                 setError(null);
             } catch (err) {
                 console.error('Failed to fetch listings:', err);
                 setError('Failed to load listings. Make sure the server is running.');
-                // Fallback to mock data if API fails
-                const { listings: mockListings } = await import('../data/mockData');
-                setListings(mockListings);
-                setFilteredListings(mockListings);
             } finally {
                 setLoading(false);
             }
         };
 
         fetchListings();
-    }, [selectedCategory, filters]); // Re-run when category or filters change
+        window.scrollTo(0, 0);
+    }, [searchQuery, guestsParam, filters]);
 
     const handleFilterApply = (newFilters) => {
         setFilters(newFilters);
     };
 
+    const getSearchDescription = () => {
+        const parts = [];
+        if (searchQuery) parts.push(`"${searchQuery}"`);
+        if (guestsParam) parts.push(`${guestsParam} guest${guestsParam > 1 ? 's' : ''}`);
+        if (checkin && checkout) {
+            const start = new Date(checkin).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+            const end = new Date(checkout).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+            parts.push(`${start} - ${end}`);
+        }
+        return parts.length > 0 ? `Results for ${parts.join(' • ')}` : 'All listings';
+    };
+
     return (
-        <div style={{ position: 'relative', minHeight: '100vh' }}>
-            {/* Hero Section */}
-            <div className="hero-section" style={{
-                height: '400px',
-                backgroundImage: 'url("https://images.unsplash.com/photo-1501785888041-af3ef285b470?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80")',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                position: 'relative',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'white',
-                textAlign: 'center',
-                marginBottom: '32px'
-            }}>
-                <div style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    background: 'rgba(0,0,0,0.3)'
-                }}></div>
-                <div style={{ position: 'relative', zIndex: 1 }}>
-                    <h1 className="hero-title" style={{ fontSize: '48px', fontWeight: '800', marginBottom: '16px', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>
-                        Find Your Perfect Stay
+        <div style={{ position: 'relative', minHeight: '100vh', paddingTop: '24px' }}>
+            <div className="container">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+                    <h1 style={{ fontSize: '24px', fontWeight: '700', color: 'var(--text-main)' }}>
+                        {getSearchDescription()}
                     </h1>
-                    <p style={{ fontSize: '20px', fontWeight: '500', maxWidth: '600px', margin: '0 auto' }}>
-                        Discover homes, cabins, and unique stays around the world.
-                    </p>
+                    <button
+                        onClick={() => setIsFilterModalOpen(true)}
+                        style={{
+                            padding: '8px 16px',
+                            border: '1px solid var(--border)',
+                            borderRadius: 'var(--radius-full)',
+                            background: 'white',
+                            cursor: 'pointer',
+                            fontWeight: '600',
+                            fontSize: '14px'
+                        }}
+                    >
+                        Filters
+                    </button>
                 </div>
             </div>
-
-            <CategoryBar
-                categories={stayCategories}
-                selectedCategory={selectedCategory}
-                onSelectCategory={setSelectedCategory}
-                onFilterClick={() => setIsFilterModalOpen(true)}
-            />
 
             <FilterModal
                 isOpen={isFilterModalOpen}
@@ -121,15 +119,21 @@ const HomePage = () => {
                     display: 'grid',
                     gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
                     gap: '32px',
-                    paddingTop: '24px',
                     paddingBottom: '80px'
                 }}>
                     {loading ? (
                         Array(8).fill(0).map((_, i) => <SkeletonListingCard key={i} />)
                     ) : (
-                        filteredListings.map(listing => (
-                            <ListingCard key={listing._id || listing.id} listing={listing} />
-                        ))
+                        filteredListings.length > 0 ? (
+                            filteredListings.map(listing => (
+                                <ListingCard key={listing._id || listing.id} listing={listing} />
+                            ))
+                        ) : (
+                            <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '48px 0' }}>
+                                <h3 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '8px' }}>No results found</h3>
+                                <p style={{ color: 'var(--text-secondary)' }}>Try adjusting your search or filters.</p>
+                            </div>
+                        )
                     )}
                 </div>
             )}
@@ -175,4 +179,4 @@ const HomePage = () => {
     );
 };
 
-export default HomePage;
+export default SearchResultsPage;

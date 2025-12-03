@@ -5,7 +5,9 @@ const userSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     role: { type: String, enum: ['user', 'admin'], default: 'user' },
-    avatar: { type: String, default: 'https://randomuser.me/api/portraits/lego/1.jpg' }
+    avatar: { type: String, default: 'https://randomuser.me/api/portraits/lego/1.jpg' },
+    phone: { type: String },
+    address: { type: String }
 }, { timestamps: true });
 
 const listingSchema = new mongoose.Schema({
@@ -35,7 +37,11 @@ const listingSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 const bookingSchema = new mongoose.Schema({
-    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    guest: {
+        name: String,
+        email: String
+    },
     listing: { type: mongoose.Schema.Types.ObjectId, ref: 'Listing' },
     experience: { type: mongoose.Schema.Types.ObjectId, ref: 'Experience' },
     package: { type: mongoose.Schema.Types.ObjectId, ref: 'Package' },

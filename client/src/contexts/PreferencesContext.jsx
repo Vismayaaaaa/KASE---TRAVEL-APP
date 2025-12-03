@@ -4,13 +4,13 @@ const PreferencesContext = createContext();
 
 export const currencies = [
     { code: 'USD', name: 'United States dollar', symbol: '$', rate: 1 },
+    { code: 'INR', name: 'Indian rupee', symbol: '₹', rate: 83.3 },
     { code: 'EUR', name: 'Euro', symbol: '€', rate: 0.92 },
     { code: 'GBP', name: 'British pound', symbol: '£', rate: 0.79 },
     { code: 'CAD', name: 'Canadian dollar', symbol: '$', rate: 1.36 },
     { code: 'AUD', name: 'Australian dollar', symbol: '$', rate: 1.52 },
     { code: 'JPY', name: 'Japanese yen', symbol: '¥', rate: 151.5 },
     { code: 'CNY', name: 'Chinese yuan', symbol: '¥', rate: 7.23 },
-    { code: 'INR', name: 'Indian rupee', symbol: '₹', rate: 83.3 },
     { code: 'BRL', name: 'Brazilian real', symbol: 'R$', rate: 5.05 },
     { code: 'RUB', name: 'Russian ruble', symbol: '₽', rate: 92.5 },
     { code: 'KRW', name: 'South Korean won', symbol: '₩', rate: 1350 },

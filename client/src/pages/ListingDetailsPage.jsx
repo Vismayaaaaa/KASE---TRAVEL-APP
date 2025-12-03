@@ -127,7 +127,7 @@ const ListingDetailsPage = () => {
 
             <ListingImages listing={listing} />
 
-            <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '80px' }}>
+            <div className="listing-details-grid">
                 {/* Left Column */}
                 <div>
                     <ListingInfo listing={listing} />
