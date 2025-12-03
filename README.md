@@ -144,14 +144,5 @@ Contributions are what make the open-source community such an amazing place to l
 4.  Push to the Branch (`git push origin feature/AmazingFeature`)
 5.  Open a Pull Request
 
-## 📞 Contact
 
-**Aman T Shekar**
-
-[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/AmanTShekar)
-
----
-
-<div align="center">
-  Made with ❤️ by Aman T Shekar
 </div>
